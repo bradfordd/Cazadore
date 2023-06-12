@@ -1,0 +1,35 @@
+/* Login.css */
+.container {
+  background-color: black;
+  color: white;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.login-form {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.login-form input {
+  margin-bottom: 10px;
+  padding: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.login-form button {
+  background-color: #ffa500;
+  color: black;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+h1,
+h2 {
+  flex-direction: column;
+}
