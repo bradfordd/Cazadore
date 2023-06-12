@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "./Login.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(""); // To display any error message
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -13,11 +15,19 @@ const Login = () => {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Username:", username);
-    console.log("Password:", password);
-    // perform your login logic here...
+
+    // Make a POST request to your server with the username and password
+    try {
+      const response = await axios.post("/api/users/login", {
+        username,
+        password,
+      });
+      // handle response, store user data, etc...
+    } catch (err) {
+      setError(err.response.data.message);
+    }
   };
 
   return (
@@ -43,6 +53,7 @@ const Login = () => {
             onChange={handlePasswordChange}
           />
         </div>
+        {error && <p>{error}</p>} {/* Displaying the error message */}
         <button type="submit">Login</button>
       </form>
     </div>
