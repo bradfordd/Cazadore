@@ -20,10 +20,13 @@ const Login = () => {
 
     // Make a POST request to your server with the username and password
     try {
-      const response = await axios.post("/api/users/login", {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        `http://localhost:5000/api/users/login`,
+        {
+          username,
+          password,
+        }
+      );
       // handle response, store user data, etc...
     } catch (err) {
       setError(err.response.data.message);

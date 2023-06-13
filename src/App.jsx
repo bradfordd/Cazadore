@@ -7,8 +7,6 @@ import axios from "axios";
 // Import the Login component
 import Login from "./Login";
 
-axios.defaults.baseURL = "http://localhost:5000";
-
 function App() {
   const [count, setCount] = useState(0);
 
