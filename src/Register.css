@@ -24,6 +24,7 @@ h1 {
 }
 
 .register-form input {
+  background-color: #333;
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 5px;
@@ -44,6 +45,7 @@ h1 {
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
+  width: 100%;
 }
 
 .register-form button:hover {

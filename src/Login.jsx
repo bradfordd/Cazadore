@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./Login.css";
+import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 
 const Login = () => {
@@ -36,12 +37,12 @@ const Login = () => {
 
   return (
     <div className="container">
-      <h1>Cazadore</h1>
       <Navbar />
-      <h2>Login</h2>
+      <h1>Login</h1>
       <form className="login-form" onSubmit={handleSubmit}>
         <div>
           <label>Username:</label>
+          <br />
           <input
             type="text"
             name="username"
@@ -51,6 +52,7 @@ const Login = () => {
         </div>
         <div>
           <label>Password:</label>
+          <br />
           <input
             type="password"
             name="password"
@@ -61,6 +63,9 @@ const Login = () => {
         {error && <p>{error}</p>} {/* Displaying the error message */}
         <button type="submit">Login</button>
       </form>
+      <div>
+        <Link to="/login">Don't have an account? Register</Link>
+      </div>
     </div>
   );
 };

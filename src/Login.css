@@ -10,7 +10,6 @@
 }
 
 .login-form {
-  background-color: #333;
   padding: 20px;
   border-radius: 5px;
 }
@@ -18,16 +17,21 @@
 .login-form input {
   margin-bottom: 10px;
   padding: 10px;
-  display: flex;
-  justify-content: flex-end;
+  border-radius: 5px;
+  border: 2px solid orange;
+  background: none;
+  color: orange;
 }
 
 .login-form button {
-  background-color: #ffa500;
+  background: orange;
   color: black;
   border: none;
   padding: 10px;
+  border-radius: 5px;
   cursor: pointer;
+  font-weight: bold;
+  width: 100%;
 }
 h1,
 h2 {

@@ -57,6 +57,7 @@ const Register = () => {
       <form className="register-form" onSubmit={handleSubmit}>
         <div>
           <label>Username:</label>
+          <br />
           <input
             type="text"
             name="username"
@@ -66,6 +67,7 @@ const Register = () => {
         </div>
         <div>
           <label>Password:</label>
+          <br />
           <input
             type="password"
             name="password"
