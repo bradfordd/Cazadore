@@ -1,0 +1,51 @@
+Register.css .container {
+  background-color: black;
+  color: orange;
+  width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+  color: orange;
+  text-align: center;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-form label {
+  color: orange;
+  margin-bottom: 5px;
+}
+
+.register-form input {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 2px solid orange;
+  background: none;
+  color: orange;
+}
+
+.register-form input::placeholder {
+  color: orange;
+}
+
+.register-form button {
+  background: orange;
+  color: black;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.register-form button:hover {
+  background: #ff8c00; /* Darker orange when hovered */
+}

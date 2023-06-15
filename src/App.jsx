@@ -1,19 +1,18 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Login from "./Login";
+import Register from "./Register";
 import "./App.css";
 import axios from "axios";
 
-// Import the Login component
-import Login from "./Login";
-
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <Login />
-    </>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </Router>
   );
 }
 

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./Login.css";
+import "./Register.css";
+import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 
-const Login = () => {
+const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(""); // To display any error message
@@ -19,10 +20,25 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Make a POST request to your server with the username and password
+    // basic validation rules
+    const passwordValidation =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,25}$/;
+    const usernameValidation = /^[a-zA-Z0-9]{8,25}$/;
+
+    if (!usernameValidation.test(username)) {
+      setError("Invalid username");
+      return;
+    }
+
+    if (!passwordValidation.test(password)) {
+      setError("Invalid password");
+      return;
+    }
+
+    // Proceed with server request if validation passed
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/users/login`,
+        `http://localhost:5000/api/users/register`,
         {
           username,
           password,
@@ -36,10 +52,9 @@ const Login = () => {
 
   return (
     <div className="container">
-      <h1>Cazadore</h1>
       <Navbar />
-      <h2>Login</h2>
-      <form className="login-form" onSubmit={handleSubmit}>
+      <h1>Register</h1>
+      <form className="register-form" onSubmit={handleSubmit}>
         <div>
           <label>Username:</label>
           <input
@@ -59,10 +74,13 @@ const Login = () => {
           />
         </div>
         {error && <p>{error}</p>} {/* Displaying the error message */}
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
       </form>
+      <div className="register-link">
+        <Link to="/login">Already have an account? Login</Link>
+      </div>
     </div>
   );
 };
 
-export default Login;
+export default Register;
