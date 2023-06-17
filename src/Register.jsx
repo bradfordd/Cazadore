@@ -9,13 +9,16 @@ import "tippy.js/dist/tippy.css";
 const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [usernameError, setUsernameError] = useState(""); // To display username error message
   const [passwordError, setPasswordError] = useState(""); // To display password error message
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [formError, setFormError] = useState("");
 
   const usernameTippyRef = useRef();
   const passwordTippyRef = useRef();
+  const confirmPasswordTippyRef = useRef();
 
   useEffect(() => {
     if (successMessage) {
@@ -37,6 +40,16 @@ const Register = () => {
     const value = event.target.value;
     setPassword(value);
     validatePassword(value);
+  };
+
+  const handleConfirmPasswordChange = (event) => {
+    const value = event.target.value;
+    setConfirmPassword(value);
+    if (value !== password) {
+      setConfirmPasswordError("Passwords do not match.");
+    } else {
+      setConfirmPasswordError("");
+    }
   };
 
   const validateUsername = (username) => {
@@ -104,6 +117,10 @@ const Register = () => {
     validateUsername(username);
     validatePassword(password);
 
+    if (password !== confirmPassword) {
+      setFormError("Passwords do not match.");
+      return; // don't submit the form if the passwords don't match
+    }
     // wait for state updates before proceeding
     setTimeout(async () => {
       if (usernameError) {
@@ -182,6 +199,23 @@ const Register = () => {
               name="password"
               required
               onChange={handlePasswordChange}
+            />
+          </Tippy>
+        </div>
+        <div>
+          <label>Confirm Password:</label>
+          <br />
+          <Tippy
+            content={confirmPasswordError}
+            onCreate={(tippy) => (confirmPasswordTippyRef.current = tippy)}
+            visible={!!confirmPasswordError}
+            placement="left"
+          >
+            <input
+              type="password"
+              name="confirmPassword"
+              required
+              onChange={handleConfirmPasswordChange}
             />
           </Tippy>
         </div>
