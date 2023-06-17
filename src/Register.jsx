@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import "./Register.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
@@ -20,15 +20,17 @@ const Register = () => {
   const passwordTippyRef = useRef();
   const confirmPasswordTippyRef = useRef();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (successMessage) {
       const timer = setTimeout(() => {
-        // perform redirection here
-      }, 2000); // redirect after 2 seconds
+        navigate("/login");
+      }, 2000);
 
-      return () => clearTimeout(timer); // cleanup on unmount
+      return () => clearTimeout(timer);
     }
-  }, [successMessage]);
+  }, [successMessage, navigate]);
 
   const handleUsernameChange = (event) => {
     const value = event.target.value;
@@ -152,6 +154,7 @@ const Register = () => {
               password,
             }
           );
+          console.log(response);
           // set success message
           setSuccessMessage("Registration successful!");
           // handle response, store user data, etc...
