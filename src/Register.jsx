@@ -1,81 +1,191 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import "./Register.css";
 import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(""); // To display any error message
+  const [usernameError, setUsernameError] = useState(""); // To display username error message
+  const [passwordError, setPasswordError] = useState(""); // To display password error message
+  const [successMessage, setSuccessMessage] = useState("");
+  const [formError, setFormError] = useState("");
+
+  const usernameTippyRef = useRef();
+  const passwordTippyRef = useRef();
+
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => {
+        // perform redirection here
+      }, 2000); // redirect after 2 seconds
+
+      return () => clearTimeout(timer); // cleanup on unmount
+    }
+  }, [successMessage]);
 
   const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
+    const value = event.target.value;
+    setUsername(value);
+    validateUsername(value);
   };
 
   const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
+    const value = event.target.value;
+    setPassword(value);
+    validatePassword(value);
+  };
+
+  const validateUsername = (username) => {
+    // Check if the username is too short or too long
+    if (username.length < 8 || username.length > 25) {
+      setUsernameError("Username must be 8-25 characters long.");
+      return;
+    }
+
+    // Check if the username contains only letters and numbers
+    const containsOnlyLettersAndNumbers = /^[a-zA-Z0-9]+$/.test(username);
+    if (!containsOnlyLettersAndNumbers) {
+      setUsernameError(
+        "Username can only contain letters (A-Z, a-z) and numbers (0-9)."
+      );
+      return;
+    }
+
+    // If all checks pass, reset the error message
+    setUsernameError("");
+  };
+
+  const validatePassword = (password) => {
+    // Checking if the password is 8-25 characters long
+    if (password.length < 8 || password.length > 25) {
+      setPasswordError("Password should be between 8 to 25 characters long");
+      return;
+    }
+
+    // Checking for presence of at least one lowercase letter
+    if (!/[a-z]/.test(password)) {
+      setPasswordError("Password should contain at least one lowercase letter");
+      return;
+    }
+
+    // Checking for presence of at least one uppercase letter
+    if (!/[A-Z]/.test(password)) {
+      setPasswordError("Password should contain at least one uppercase letter");
+      return;
+    }
+
+    // Checking for presence of at least one digit
+    if (!/\d/.test(password)) {
+      setPasswordError("Password should contain at least one number");
+      return;
+    }
+
+    // Checking for presence of at least one special character
+    if (!/[@$!%*?&#_\-+=^~[\]{}:;,.<>\/\\|]/.test(password)) {
+      setPasswordError(
+        "Password should contain at least one special character (@, $, !, %, *, ?, &, #, _, -, +, =, ^, ~, [, ], {, }, :, ;, ,, ., <, >, /, \\, |)"
+      );
+      return;
+    }
+
+    setPasswordError(""); // reset the error message if input is valid
   };
 
   const handleSubmit = async (event) => {
+    setFormError(""); // Clear the general form error when form is submitted
+
     event.preventDefault();
 
-    // basic validation rules
-    const passwordValidation =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,25}$/;
-    const usernameValidation = /^[a-zA-Z0-9]{8,25}$/;
+    // validate the inputs again before making the request
+    validateUsername(username);
+    validatePassword(password);
 
-    if (!usernameValidation.test(username)) {
-      setError("Invalid username");
-      return;
-    }
-
-    if (!passwordValidation.test(password)) {
-      setError("Invalid password");
-      return;
-    }
-
-    // Proceed with server request if validation passed
-    try {
-      const response = await axios.post(
-        `http://localhost:5000/api/users/register`,
-        {
-          username,
-          password,
+    // wait for state updates before proceeding
+    setTimeout(async () => {
+      if (usernameError) {
+        if (usernameTippyRef.current) {
+          usernameTippyRef.current.show(); // Manually show the tooltip
         }
-      );
-      // handle response, store user data, etc...
-    } catch (err) {
-      setError(err.response.data.message);
-    }
+      } else {
+        if (usernameTippyRef.current) {
+          usernameTippyRef.current.hide(); // Manually hide the tooltip
+        }
+      }
+
+      if (passwordError) {
+        if (passwordTippyRef.current) {
+          passwordTippyRef.current.show(); // Manually show the tooltip
+        }
+      } else {
+        if (passwordTippyRef.current) {
+          passwordTippyRef.current.hide(); // Manually hide the tooltip
+        }
+      }
+
+      if (!usernameError && !passwordError) {
+        try {
+          const response = await axios.post(
+            `http://localhost:5000/api/users/register`,
+            {
+              username,
+              password,
+            }
+          );
+          // set success message
+          setSuccessMessage("Registration successful!");
+          // handle response, store user data, etc...
+        } catch (err) {
+          setFormError(err.response.data.message);
+        }
+      }
+    }, 0);
   };
 
   return (
     <div className="container">
       <Navbar />
       <h1>Register</h1>
+      {successMessage && <p>{successMessage}</p>}
       <form className="register-form" onSubmit={handleSubmit}>
         <div>
           <label>Username:</label>
           <br />
-          <input
-            type="text"
-            name="username"
-            required
-            onChange={handleUsernameChange}
-          />
+          <Tippy
+            content={usernameError}
+            onCreate={(tippy) => (usernameTippyRef.current = tippy)}
+            visible={!!usernameError}
+            placement="left"
+          >
+            <input
+              type="text"
+              name="username"
+              required
+              onChange={handleUsernameChange}
+            />
+          </Tippy>
         </div>
         <div>
           <label>Password:</label>
           <br />
-          <input
-            type="password"
-            name="password"
-            required
-            onChange={handlePasswordChange}
-          />
+          <Tippy
+            content={passwordError}
+            onCreate={(tippy) => (passwordTippyRef.current = tippy)}
+            visible={!!passwordError}
+            placement="left"
+          >
+            <input
+              type="password"
+              name="password"
+              required
+              onChange={handlePasswordChange}
+            />
+          </Tippy>
         </div>
-        {error && <p>{error}</p>} {/* Displaying the error message */}
+        {formError && <p className="form-error">{formError}</p>}
         <button type="submit">Register</button>
       </form>
       <div className="register-link">
