@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
+import Homepage from "./Homepage";
 import "./App.css";
 import axios from "axios";
 
@@ -27,6 +28,7 @@ function App() {
         <Route path="/" element={<RedirectToLogin />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/homepage" element={<Homepage />} />
       </Routes>
     </Router>
   );

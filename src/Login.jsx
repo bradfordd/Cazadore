@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./Login.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(""); // To display any error message
+
+  const navigate = useNavigate();
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -20,7 +22,6 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Make a POST request to your server with the username and password
     try {
       const response = await axios.post(
         `http://localhost:5000/api/users/login`,
@@ -29,7 +30,13 @@ const Login = () => {
           password,
         }
       );
-      // handle response, store user data, etc...
+
+      if (response.status === 200) {
+        // If login was successful, navigate to the homepage
+        navigate("/homepage");
+      } else {
+        setError("Invalid username or password");
+      }
     } catch (err) {
       setError(err.response.data.message);
     }
