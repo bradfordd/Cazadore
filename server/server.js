@@ -3,6 +3,7 @@ const db = require("./db");
 const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes"); // import the routes
 const cors = require("cors");
+require("dotenv").config({ path: "../.env" });
 
 const app = express();
 

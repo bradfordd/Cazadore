@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const validator = require("../validators/userValidator");
+const jwt = require("jsonwebtoken");
 
 exports.registerNewUser = async (req, res) => {
   // Validate the username and password
@@ -42,7 +43,13 @@ exports.registerNewUser = async (req, res) => {
   try {
     console.log("Saving user to the database..."); // Log when starting to save user to the database
     const newUser = await user.save();
-    res.status(201).json(newUser);
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_KEY, {
+      expiresIn: "1h",
+    });
+    res.status(201).json({
+      newUser,
+      token, // Add token to response
+    });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -58,12 +65,14 @@ exports.loginUser = async (req, res) => {
   try {
     // Check password
     if (await bcrypt.compare(req.body.password, user.password)) {
-      res.send("Success");
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
+        expiresIn: "1h",
+      });
+      res.json({ token }); // Send the token in the response
     } else {
-      const match = await bcrypt.compare(req.body.password, user.password);
-      res.send("Not Allowed");
+      res.status(403).json({ message: "Not Allowed" }); // Unauthorized access
     }
   } catch (err) {
-    res.status(500).send();
+    res.status(500).json({ message: err.message });
   }
 };
