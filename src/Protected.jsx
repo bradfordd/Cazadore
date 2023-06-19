@@ -9,7 +9,12 @@ const Protected = () => {
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/protected");
+        const response = await axios.get(
+          "http://localhost:5000/api/protected",
+          {
+            withCredentials: true,
+          }
+        );
 
         if (response.status === 200) {
           setIsLoading(false);
