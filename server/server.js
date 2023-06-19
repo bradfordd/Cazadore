@@ -3,6 +3,8 @@ const db = require("./db");
 const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes"); // import the routes
 const cors = require("cors");
+const cookieParser = require("cookie-parser"); // import the cookie-parser
+const authenticateJWT = require("./middleware/authenticateJWT");
 require("dotenv").config({ path: "../.env" });
 
 const app = express();
@@ -10,13 +12,19 @@ const app = express();
 app.use(
   cors({
     origin: "http://localhost:5173", // replace with your frontend's address
+    credentials: true, // add this line
   })
 );
 
 app.use(bodyParser.json());
+app.use(cookieParser()); // use the cookie-parser middleware
 
 // use your routes
 app.use("/api/users", userRoutes);
+
+app.get("/api/protected", authenticateJWT, (req, res) => {
+  res.send("You accessed a protected route!");
+});
 
 db.connect();
 

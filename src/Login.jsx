@@ -28,7 +28,8 @@ const Login = () => {
         {
           username,
           password,
-        }
+        },
+        { withCredentials: true } // Add this line
       );
 
       if (response.status === 200) {

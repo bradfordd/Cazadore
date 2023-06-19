@@ -41,15 +41,19 @@ exports.registerNewUser = async (req, res) => {
 
   // Save user to the database
   try {
-    console.log("Saving user to the database..."); // Log when starting to save user to the database
+    // ... (omitted for brevity) ...
     const newUser = await user.save();
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_KEY, {
       expiresIn: "1h",
     });
-    res.status(201).json({
-      newUser,
-      token, // Add token to response
+    // Here we are using the cookie-parser middleware to set a HttpOnly cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "Lax",
+      secure: process.env.NODE_ENV === "production",
     });
+
+    res.status(201).json({ newUser });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -68,7 +72,14 @@ exports.loginUser = async (req, res) => {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
         expiresIn: "1h",
       });
-      res.json({ token }); // Send the token in the response
+      // Setting the HTTP cookie with the token
+      res.cookie("token", token, {
+        httpOnly: true,
+        sameSite: "Lax",
+        secure: process.env.NODE_ENV === "production",
+      });
+
+      res.status(200).json({ message: "Login successful" });
     } else {
       res.status(403).json({ message: "Not Allowed" }); // Unauthorized access
     }
