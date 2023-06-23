@@ -1,7 +1,8 @@
 const express = require("express");
 const db = require("./db");
 const bodyParser = require("body-parser");
-const userRoutes = require("./routes/userRoutes"); // import the routes
+const userRoutes = require("./routes/userRoutes"); // import the user routes
+const bugReportRoutes = require("./routes/bugReportRoutes"); // import the bug report routes
 const cors = require("cors");
 const cookieParser = require("cookie-parser"); // import the cookie-parser
 const authenticateJWT = require("./middleware/authenticateJWT");
@@ -21,6 +22,7 @@ app.use(cookieParser()); // use the cookie-parser middleware
 
 // use your routes
 app.use("/api/users", userRoutes);
+app.use("/api/bugReports", bugReportRoutes); // use bug report routes
 
 app.get("/api/protected", authenticateJWT, (req, res) => {
   res.send("You accessed a protected route!");
