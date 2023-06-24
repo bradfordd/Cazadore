@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import BugReportList from "./BugReportList"; // adjust the path as necessary
 
 const Homepage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -37,6 +38,7 @@ const Homepage = () => {
     <div>
       <h1>Welcome to the Homepage!</h1>
       <p>This is your homepage. You can add more content here.</p>
+      <BugReportList /> {/* Include the BugReportList component here */}
     </div>
   );
 };
