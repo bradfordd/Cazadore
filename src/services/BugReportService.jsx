@@ -1,18 +1,16 @@
 import axios from "axios";
 
 export default {
-  getAllBugReports: async (page, perPage) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:5000/api/bugReports/all?page=${page}&limit=${perPage}`
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching data: ", error);
-      return [];
-    }
-  },
+  getAllBugReports: async (page, limit, searchTerm = "") => {
+    let url = `http://localhost:5000/api/bugReports/all?page=${page}&limit=${limit}`;
 
+    if (searchTerm) {
+      url += `&searchTerm=${searchTerm}`;
+    }
+
+    const response = await axios.get(url);
+    return response.data;
+  },
   getAllBugReportsNoPagination: async () => {
     const response = await axios.get(
       "http://localhost:5000/api/bugReports/all"
