@@ -1,7 +1,19 @@
 import axios from "axios";
 
 export default {
-  getAllBugReports: async () => {
+  getAllBugReports: async (page, perPage) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/bugReports/all?page=${page}&limit=${perPage}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+      return [];
+    }
+  },
+
+  getAllBugReportsNoPagination: async () => {
     const response = await axios.get(
       "http://localhost:5000/api/bugReports/all"
     );
@@ -9,7 +21,9 @@ export default {
   },
 
   getBugReportById: async (id) => {
-    const response = await axios.get(`/api/bugReports/${id}`);
+    const response = await axios.get(
+      `http://localhost:5000/api/bugReports/${id}`
+    );
     return response.data;
   },
 };

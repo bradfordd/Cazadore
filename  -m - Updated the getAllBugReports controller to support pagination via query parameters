@@ -1,0 +1,97 @@
+[33mcommit 9df7e9379159059e44bbb8e592a05b61dd282380[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: bradfordd <dbradford1337@gmail.com>
+Date:   Sat Jun 24 14:58:47 2023 -0400
+
+    feat: Implement pagination for bug reports
+    
+    - Updated the getAllBugReports controller to support pagination via query parameters
+
+[33mcommit 3196809916f6747df7efacfa80065e59068ba18a[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: bradfordd <dbradford1337@gmail.com>
+Date:   Fri Jun 23 21:54:38 2023 -0400
+
+    Implemented the 'Get All Bug Reports' functionality on the frontend
+
+[33mcommit 5c7f3fd31acd26c9faf2aacfeb9f55ce4748c018[m
+Author: bradfordd <dbradford1337@gmail.com>
+Date:   Fri Jun 23 14:52:01 2023 -0400
+
+    Commit Title: Added Create Bug Report API endpoint
+
+[33mcommit c500b9d41e5e19ae999e6412c0d46a93faa1b837[m
+Author: bradfordd <dbradford1337@gmail.com>
+Date:   Mon Jun 19 16:56:00 2023 -0400
+
+    successfully accessed protected page
+
+[33mcommit cbeea8b858dd1709f866c7d61ebe33b0a786e985[m
+Author: bradfordd <dbradford1337@gmail.com>
+Date:   Mon Jun 19 16:47:47 2023 -0400
+
+    login cookies implemented
+
+[33mcommit 024af3233e211cf047fc4cd05e6eab93376ba506[m
+Author: bradfordd <dbradford1337@gmail.com>
+Date:   Sun Jun 18 16:43:53 2023 -0400
+
+    Environment variables and json web tokens implemented
+
+[33mcommit 19d2ec61bfa705f45964bb535359333535a35de5[m
+Author: bradfordd <dbradford1337@gmail.com>
+Date:   Sat Jun 17 20:20:10 2023 -0400
+
+    Implemented login redirect to newly implemented Homepage boilerplate
+
+[33mcommit 5efeebc23ed7e7f03b8741869500214a74616611[m
+Author: bradfordd <dbradford1337@gmail.com>
+Date:   Sat Jun 17 18:38:42 2023 -0400
+
+    finished the registration page for now
+
+[33mcommit e8a5363fe5a8ad3a6a5ef12404f70bcb36cc1a9c[m
+Author: bradfordd <dbradford1337@gmail.com>
+Date:   Sat Jun 17 17:54:38 2023 -0400
+
+    bug fixes and confirm password added to registration from
+
+[33mcommit bbda0ba3d25fcc61b6b865dc1bc911dab7ff93a1[m
+Author: bradfordd <dbradford1337@gmail.com>
+Date:   Sat Jun 17 13:20:28 2023 -0400
+
+    Registration error and success messages completed along with updates to backend regarding registration
+
+[33mcommit 3de827bd8ffe5da075b5065634829063695f51c3[m
+Author: bradfordd <dbradford1337@gmail.com>
+Date:   Thu Jun 15 15:56:55 2023 -0400
+
+    Added redirect functionality and added styling changes for Navbar and registration page
+
+[33mcommit b42ddb0161bcd491579ff89e540635206b8f7c77[m
+Author: bradfordd <dbradford1337@gmail.com>
+Date:   Thu Jun 15 14:26:13 2023 -0400
+
+    Finished routing, company logo, and register page
+
+[33mcommit bfbfc0ee8dccde6efa5d6b090ab0328ba5b34824[m
+Author: bradfordd <dbradford1337@gmail.com>
+Date:   Mon Jun 12 23:13:40 2023 -0400
+
+    first sucessful frontend api login
+
+[33mcommit 5b9615aa6cdf23923ac02c4210d5f60365a3cd69[m
+Author: bradfordd <dbradford1337@gmail.com>
+Date:   Mon Jun 12 19:51:44 2023 -0400
+
+    Fixed rehashing issue with usercontroller preventing successful login
+
+[33mcommit 7dfbc2b93eb8c5b57cb3f3bf7e769b7d46acbf5f[m
+Author: bradfordd <dbradford1337@gmail.com>
+Date:   Sun Jun 11 23:00:12 2023 -0400
+
+    backend and frontend initialized
+
+[33mcommit d78a5aced448907af1dabd4ec5d0a0e477cb8fb8[m
+Author: bradfordd <dbradford1337@gmail.com>
+Date:   Fri Jun 9 13:57:10 2023 -0400
+
+    Initial commit
