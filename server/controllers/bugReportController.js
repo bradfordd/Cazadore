@@ -37,15 +37,26 @@ exports.createBugReport = async (req, res) => {
   }
 };
 
-// New function to get all bug reports
+// Updated function to get all bug reports with pagination
 exports.getAllBugReports = async (req, res) => {
-  try {
-    const bugReports = await BugReport.find({});
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
 
-    // send success response
-    res.status(200).json(bugReports);
+  try {
+    const bugReports = await BugReport.find()
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    // Get total number of bug reports
+    const totalBugReports = await BugReport.countDocuments();
+
+    res.status(200).json({
+      total: totalBugReports,
+      page,
+      limit,
+      bugReports,
+    });
   } catch (error) {
-    // send error response
     res.status(500).json({ error: error.message });
   }
 };

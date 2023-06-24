@@ -5,7 +5,10 @@ const bugReportController = require("../controllers/bugReportController");
 const router = express.Router();
 
 router.post("/create", bugReportController.createBugReport);
+
+// Get all bug reports - now supports pagination via query parameters 'page' and 'limit'
 router.get("/all", bugReportController.getAllBugReports);
+
 router.get("/:id", bugReportController.getBugReportById);
 
 module.exports = router;
