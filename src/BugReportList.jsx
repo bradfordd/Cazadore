@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BugReportService from "./services/BugReportService";
+import BugReportDetail from "./BugReportDetail";
 
 function BugReportList() {
   const [bugReports, setBugReports] = useState([]);
@@ -10,6 +11,7 @@ function BugReportList() {
   const [status, setStatus] = useState(""); // Status filter
   const [priority, setPriority] = useState(""); // Priority filter
   const [assignee, setAssignee] = useState(""); // Assignee filter
+  const [selectedBug, setSelectedBug] = useState(null);
 
   useEffect(() => {
     const fetchBugReports = async () => {
@@ -63,6 +65,12 @@ function BugReportList() {
     setPage(1);
   };
 
+  if (selectedBug) {
+    return (
+      <BugReportDetail bug={selectedBug} goBack={() => setSelectedBug(null)} />
+    );
+  }
+
   return (
     <div>
       <input
@@ -93,14 +101,25 @@ function BugReportList() {
       <div>
         Page: {page} / {totalPages}
       </div>
-      {bugReports.map((report) => (
-        <div key={report._id}>
-          <h2>{report.title}</h2>
-          <p>{report.description}</p>
-        </div>
-      ))}
-      <button onClick={prevPage}>Previous</button>
-      <button onClick={nextPage}>Next</button>
+      {selectedBug ? (
+        <BugReportDetail
+          bug={selectedBug}
+          goBack={() => setSelectedBug(null)}
+        />
+      ) : (
+        bugReports.map((report) => (
+          <div key={report._id} onClick={() => setSelectedBug(report)}>
+            <h2>{report.title}</h2>
+            <p>{report.description}</p>
+          </div>
+        ))
+      )}
+      {!selectedBug && (
+        <>
+          <button onClick={prevPage}>Previous</button>
+          <button onClick={nextPage}>Next</button>
+        </>
+      )}
     </div>
   );
 }
