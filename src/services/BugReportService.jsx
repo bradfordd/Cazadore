@@ -1,11 +1,18 @@
 import axios from "axios";
 
 export default {
-  getAllBugReports: async (page, limit, searchTerm = "") => {
+  getAllBugReports: async (page, limit, searchTerm = "", filters = {}) => {
     let url = `http://localhost:5000/api/bugReports/all?page=${page}&limit=${limit}`;
 
     if (searchTerm) {
-      url += `&searchTerm=${searchTerm}`;
+      url += `&searchTerm=${encodeURIComponent(searchTerm)}`;
+    }
+
+    // Add filter parameters to URL
+    for (const key in filters) {
+      if (filters[key]) {
+        url += `&${key}=${encodeURIComponent(filters[key])}`;
+      }
     }
 
     const response = await axios.get(url);

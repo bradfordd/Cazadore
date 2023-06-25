@@ -7,20 +7,30 @@ function BugReportList() {
   const [perPage, setPerPage] = useState(10); // Items per page
   const [totalPages, setTotalPages] = useState(0); // Total pages
   const [searchTerm, setSearchTerm] = useState(""); // Search term
+  const [status, setStatus] = useState(""); // Status filter
+  const [priority, setPriority] = useState(""); // Priority filter
+  const [assignee, setAssignee] = useState(""); // Assignee filter
 
   useEffect(() => {
     const fetchBugReports = async () => {
+      const filters = {
+        status: status,
+        priority: priority,
+        assignedTo: assignee,
+      };
+
       const data = await BugReportService.getAllBugReports(
         page,
         perPage,
-        searchTerm
+        searchTerm,
+        filters
       );
       setBugReports(data.bugReports);
       setTotalPages(Math.ceil(data.total / perPage)); // Calculate total pages
     };
 
     fetchBugReports();
-  }, [page, perPage, searchTerm]); // Add searchTerm to dependencies
+  }, [page, perPage, searchTerm, status, priority, assignee]); // Add filters to dependencies
 
   const nextPage = () => {
     setPage(page + 1);
@@ -37,6 +47,22 @@ function BugReportList() {
     setPage(1); // Reset page number to 1 when search term changes
   };
 
+  // New handlers for filter changes
+  const handleStatusChange = (e) => {
+    setStatus(e.target.value);
+    setPage(1);
+  };
+
+  const handlePriorityChange = (e) => {
+    setPriority(e.target.value);
+    setPage(1);
+  };
+
+  const handleAssigneeChange = (e) => {
+    setAssignee(e.target.value);
+    setPage(1);
+  };
+
   return (
     <div>
       <input
@@ -46,6 +72,24 @@ function BugReportList() {
         placeholder="Search by title..."
       />{" "}
       {/* Search input */}
+      <select value={status} onChange={handleStatusChange}>
+        <option value="">All statuses</option>
+        <option value="Open">Open</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Closed">Closed</option>
+      </select>
+      <select value={priority} onChange={handlePriorityChange}>
+        <option value="">All priorities</option>
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+      </select>
+      <input
+        type="text"
+        value={assignee}
+        onChange={handleAssigneeChange}
+        placeholder="Assigned to..."
+      />
       <div>
         Page: {page} / {totalPages}
       </div>
