@@ -1,4 +1,34 @@
 const BugReport = require("../models/bugreport");
+const User = require("../models/user");
+
+exports.updateBugReport = async (req, res) => {
+  try {
+    // First, we'll validate the user ID
+    const user = await User.findById(req.body.assignedTo);
+    if (!user) {
+      return res.status(400).json({ error: "Invalid user ID" });
+    }
+
+    // Now, we'll update the bug report
+    const updatedBugReport = await BugReport.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true, // option that returns the new version of the updated document
+        runValidators: true, // validates the update operation against the model's schema
+      }
+    );
+
+    // If no bug report was found with the provided ID, return an error
+    if (!updatedBugReport) {
+      return res.status(404).json({ error: "Bug report not found" });
+    }
+
+    res.status(200).json(updatedBugReport);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 exports.createBugReport = async (req, res) => {
   try {

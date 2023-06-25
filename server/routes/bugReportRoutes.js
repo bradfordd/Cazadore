@@ -11,4 +11,6 @@ router.get("/all", bugReportController.getAllBugReports);
 
 router.get("/:id", bugReportController.getBugReportById);
 
+router.put("/:id", bugReportController.updateBugReport);
+
 module.exports = router;
