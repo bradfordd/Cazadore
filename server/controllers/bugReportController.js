@@ -39,22 +39,41 @@ exports.createBugReport = async (req, res) => {
 
 // Updated function to get all bug reports with pagination
 // Updated function to get all bug reports with pagination and search functionality
+// Updated function to get all bug reports with pagination and search functionality
 exports.getAllBugReports = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   const searchTerm = req.query.searchTerm || "";
 
+  // Extract filter parameters from request query
+  const statusFilter = req.query.status;
+  const priorityFilter = req.query.priority;
+  const assigneeFilter = req.query.assignedTo;
+
+  // Construct MongoDB query based on filters
+  let query = {
+    title: new RegExp(searchTerm, "i"), // This will find bug reports with a title containing the searchTerm
+  };
+
+  if (statusFilter) {
+    query.status = statusFilter;
+  }
+
+  if (priorityFilter) {
+    query.priority = priorityFilter;
+  }
+
+  if (assigneeFilter) {
+    query.assignedTo = assigneeFilter;
+  }
+
   try {
-    const bugReports = await BugReport.find({
-      title: new RegExp(searchTerm, "i"), // This will find bug reports with a title containing the searchTerm
-    })
+    const bugReports = await BugReport.find(query)
       .skip((page - 1) * limit)
       .limit(limit);
 
-    // Get total number of bug reports matching the searchTerm
-    const totalBugReports = await BugReport.countDocuments({
-      title: new RegExp(searchTerm, "i"), // This will count the number of documents with a title containing the searchTerm
-    });
+    // Get total number of bug reports matching the searchTerm and filters
+    const totalBugReports = await BugReport.countDocuments(query);
 
     res.status(200).json({
       total: totalBugReports,
