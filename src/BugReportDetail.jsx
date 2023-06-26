@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import UserService from "./services/UserService";
+import BugReportService from "./services/BugReportService";
 
 function BugReportDetail({ bug, goBack }) {
   const [users, setUsers] = useState([]);
@@ -15,6 +16,16 @@ function BugReportDetail({ bug, goBack }) {
     fetchUsers();
   }, []);
 
+  const assignBug = async () => {
+    if (selectedUser) {
+      const updatedBug = await BugReportService.assignBugToUser(
+        bug._id,
+        selectedUser
+      );
+      bug.assignedTo = updatedBug.assignedTo;
+    }
+  };
+
   return (
     <div>
       <h1>{bug.title}</h1>
@@ -28,15 +39,17 @@ function BugReportDetail({ bug, goBack }) {
         Created by: {bug.createdBy.name} (Display name depending on your User
         model structure)
       </p>
-      <p>
-        Assigned to: {bug.assignedTo ? bug.assignedTo.name : "Not Assigned"}
-      </p>
+      <p>Assigned to: {bug.assignedTo ? bug.assignedTo : "Not Assigned"}</p>
 
       <label>
         Assign to:
         <select
           value={selectedUser}
-          onChange={(event) => setSelectedUser(event.target.value)}
+          onChange={(event) => {
+            console.log("change detected");
+            setSelectedUser(event.target.value);
+            assignBug();
+          }}
         >
           <option value="">Select a user</option>
           {users.map((user) => (
