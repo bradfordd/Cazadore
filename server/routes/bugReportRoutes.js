@@ -13,4 +13,6 @@ router.get("/:id", bugReportController.getBugReportById);
 
 router.put("/:id", bugReportController.updateBugReport);
 
+router.patch("/:id/assign", bugReportController.assignBugReport);
+
 module.exports = router;
