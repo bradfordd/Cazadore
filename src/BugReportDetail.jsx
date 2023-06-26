@@ -35,10 +35,7 @@ function BugReportDetail({ bug, goBack }) {
       <p>Actual Result: {bug.actualResult}</p>
       <p>Priority: {bug.priority}</p>
       <p>Status: {bug.status}</p>
-      <p>
-        Created by: {bug.createdBy.name} (Display name depending on your User
-        model structure)
-      </p>
+      <p>Created by: {bug.createdBy.username ? bug.createdBy : "Unknown"}</p>
       <p>Assigned to: {bug.assignedTo ? bug.assignedTo : "Not Assigned"}</p>
 
       <label>

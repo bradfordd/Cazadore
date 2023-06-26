@@ -99,6 +99,8 @@ exports.getAllBugReports = async (req, res) => {
 
   try {
     const bugReports = await BugReport.find(query)
+      .populate("assignedTo", "_id username")
+      .populate("createdBy", "_id username")
       .skip((page - 1) * limit)
       .limit(limit);
 
