@@ -29,14 +29,20 @@ function BugReportDetail({ bug, goBack }) {
   return (
     <div>
       <h1>{bug.title}</h1>
-      <p>{bug.description}</p>
       <p>Steps to Reproduce: {bug.stepsToReproduce}</p>
       <p>Expected Result: {bug.expectedResult}</p>
       <p>Actual Result: {bug.actualResult}</p>
       <p>Priority: {bug.priority}</p>
       <p>Status: {bug.status}</p>
-      <p>Created by: {bug.createdBy.username ? bug.createdBy : "Unknown"}</p>
-      <p>Assigned to: {bug.assignedTo ? bug.assignedTo : "Not Assigned"}</p>
+      <p>{bug.description}</p>
+      <p>
+        Created by:{" "}
+        {bug.createdBy.username ? bug.createdBy.username : "Unknown"}
+      </p>
+      <p>
+        Assigned to:{" "}
+        {bug.assignedTo.username ? bug.assignedTo.username : "Not Assigned"}
+      </p>
 
       <label>
         Assign to:
