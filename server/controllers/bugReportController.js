@@ -118,9 +118,9 @@ exports.getAllBugReports = async (req, res) => {
 
 exports.getBugReportById = async (req, res) => {
   try {
-    const bugReport = await BugReport.findById(req.params.id).populate(
-      "assignedTo"
-    );
+    const bugReport = await BugReport.findById(req.params.id)
+      .populate("assignedTo", "-password -__v") // Exclude password and __v fields
+      .populate("createdBy", "-password -__v"); // Exclude password and __v fields
 
     // If the bug report was not found, send an appropriate error message
     if (!bugReport) {
