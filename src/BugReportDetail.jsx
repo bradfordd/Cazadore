@@ -41,7 +41,9 @@ function BugReportDetail({ bug, goBack }) {
       </p>
       <p>
         Assigned to:{" "}
-        {bug.assignedTo.username ? bug.assignedTo.username : "Not Assigned"}
+        {bug.assignedTo && bug.assignedTo.username
+          ? bug.assignedTo.username
+          : "Not Assigned"}
       </p>
 
       <label>

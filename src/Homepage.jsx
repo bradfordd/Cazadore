@@ -36,8 +36,6 @@ const Homepage = () => {
 
   return (
     <div>
-      <h1>Welcome to the Homepage!</h1>
-      <p>This is your homepage. You can add more content here.</p>
       <BugReportList /> {/* Include the BugReportList component here */}
     </div>
   );
