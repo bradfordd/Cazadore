@@ -87,3 +87,12 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({}, "username _id"); // Get all users with just 'username' and '_id' fields
+    return res.status(200).json(users);
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
