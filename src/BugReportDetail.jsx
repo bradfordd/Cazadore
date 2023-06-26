@@ -1,6 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import UserService from "./services/UserService";
 
 function BugReportDetail({ bug, goBack }) {
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState("");
+
+  // Fetch all users when component mounts
+  useEffect(() => {
+    async function fetchUsers() {
+      const fetchedUsers = await UserService.getAllUsers();
+      setUsers(fetchedUsers);
+    }
+
+    fetchUsers();
+  }, []);
+
   return (
     <div>
       <h1>{bug.title}</h1>
@@ -17,6 +31,22 @@ function BugReportDetail({ bug, goBack }) {
       <p>
         Assigned to: {bug.assignedTo ? bug.assignedTo.name : "Not Assigned"}
       </p>
+
+      <label>
+        Assign to:
+        <select
+          value={selectedUser}
+          onChange={(event) => setSelectedUser(event.target.value)}
+        >
+          <option value="">Select a user</option>
+          {users.map((user) => (
+            <option key={user._id} value={user._id}>
+              {user.username}
+            </option>
+          ))}
+        </select>
+      </label>
+
       <button onClick={goBack}>Back to List</button>
     </div>
   );
