@@ -118,7 +118,9 @@ exports.getAllBugReports = async (req, res) => {
 
 exports.getBugReportById = async (req, res) => {
   try {
-    const bugReport = await BugReport.findById(req.params.id);
+    const bugReport = await BugReport.findById(req.params.id).populate(
+      "assignedTo"
+    );
 
     // If the bug report was not found, send an appropriate error message
     if (!bugReport) {
