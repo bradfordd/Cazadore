@@ -31,6 +31,11 @@ function BugReportDetail({ bug, goBack }) {
     }
   };
 
+  const retireBug = async () => {
+    await BugReportService.retireBugReport(bug._id);
+    goBack();
+  };
+
   return (
     <div>
       <h1>{bug.title}</h1>
@@ -71,6 +76,7 @@ function BugReportDetail({ bug, goBack }) {
       </label>
       <button onClick={assignBug}>Assign</button>
       <button onClick={goBack}>Back to List</button>
+      <button onClick={retireBug}>Retire Bug Report</button>
     </div>
   );
 }

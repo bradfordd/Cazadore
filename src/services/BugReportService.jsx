@@ -38,4 +38,16 @@ export default {
     );
     return response.data;
   },
+  retireBugReport: async (bugReportId) => {
+    const response = await axios.put(
+      `http://localhost:5000/api/bugReports/${bugReportId}/retire`
+    );
+    return response.data;
+  },
+  reactivateBugReport: async (bugReportId) => {
+    const response = await axios.put(
+      `http://localhost:5000/api/bugReports/${bugReportId}/reactivate`
+    );
+    return response.data;
+  },
 };
