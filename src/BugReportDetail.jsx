@@ -5,6 +5,7 @@ import BugReportService from "./services/BugReportService";
 function BugReportDetail({ bug, goBack }) {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
+  const [pendingUser, setPendingUser] = useState("");
 
   // Fetch all users when component mounts
   useEffect(() => {
@@ -17,12 +18,15 @@ function BugReportDetail({ bug, goBack }) {
   }, []);
 
   const assignBug = async () => {
-    if (selectedUser) {
+    if (pendingUser) {
       const updatedBug = await BugReportService.assignBugToUser(
         bug._id,
-        selectedUser
+        pendingUser
       );
-      bug.assignedTo = updatedBug.assignedTo;
+      if (updatedBug) {
+        bug.assignedTo = updatedBug.assignedTo;
+        setSelectedUser(pendingUser);
+      }
     }
   };
 
@@ -37,7 +41,9 @@ function BugReportDetail({ bug, goBack }) {
       <p>{bug.description}</p>
       <p>
         Created by:{" "}
-        {bug.createdBy.username ? bug.createdBy.username : "Unknown"}
+        {bug.createdBy && bug.createdBy.username
+          ? bug.createdBy.username
+          : "Not Assigned"}
       </p>
       <p>
         Assigned to:{" "}
@@ -49,11 +55,9 @@ function BugReportDetail({ bug, goBack }) {
       <label>
         Assign to:
         <select
-          value={selectedUser}
+          value={pendingUser}
           onChange={(event) => {
-            console.log("change detected");
-            setSelectedUser(event.target.value);
-            assignBug();
+            setPendingUser(event.target.value);
           }}
         >
           <option value="">Select a user</option>
@@ -64,7 +68,7 @@ function BugReportDetail({ bug, goBack }) {
           ))}
         </select>
       </label>
-
+      <button onClick={assignBug}>Assign</button>
       <button onClick={goBack}>Back to List</button>
     </div>
   );

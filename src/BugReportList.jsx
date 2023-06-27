@@ -12,6 +12,7 @@ function BugReportList() {
   const [priority, setPriority] = useState(""); // Priority filter
   const [assignee, setAssignee] = useState(""); // Assignee filter
   const [selectedBug, setSelectedBug] = useState(null);
+  const [updateKey, setUpdateKey] = useState(0);
 
   useEffect(() => {
     const fetchBugReports = async () => {
@@ -32,7 +33,7 @@ function BugReportList() {
     };
 
     fetchBugReports();
-  }, [page, perPage, searchTerm, status, priority, assignee]); // Add filters to dependencies
+  }, [page, perPage, searchTerm, status, priority, assignee, updateKey]); // Add filters to dependencies
 
   const nextPage = () => {
     setPage(page + 1);
@@ -67,7 +68,13 @@ function BugReportList() {
 
   if (selectedBug) {
     return (
-      <BugReportDetail bug={selectedBug} goBack={() => setSelectedBug(null)} />
+      <BugReportDetail
+        bug={selectedBug}
+        goBack={() => {
+          setSelectedBug(null);
+          setUpdateKey(updateKey + 1);
+        }}
+      />
     );
   }
 
