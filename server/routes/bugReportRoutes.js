@@ -15,4 +15,6 @@ router.put("/:id", bugReportController.updateBugReport);
 
 router.patch("/:id/assign", bugReportController.assignBugReport);
 
+router.put("/:id/retire", bugReportController.retireBugReport);
+
 module.exports = router;

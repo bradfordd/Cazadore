@@ -44,6 +44,11 @@ const bugReportSchema = new mongoose.Schema(
       ref: "User",
       default: null,
     },
+    isActive: {
+      // New field
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true, // This adds fields for creation and update timestamps

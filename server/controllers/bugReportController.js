@@ -9,6 +9,14 @@ exports.updateBugReport = async (req, res) => {
       return res.status(400).json({ error: "Invalid user ID" });
     }
 
+    // Check if bug report is active
+    const bugReport = await BugReport.findById(req.params.id);
+    if (!bugReport || !bugReport.isActive) {
+      return res
+        .status(404)
+        .json({ error: "Bug report not found or already deleted" });
+    }
+
     // Now, we'll update the bug report
     const updatedBugReport = await BugReport.findByIdAndUpdate(
       req.params.id,
@@ -83,6 +91,7 @@ exports.getAllBugReports = async (req, res) => {
   // Construct MongoDB query based on filters
   let query = {
     title: new RegExp(searchTerm, "i"), // This will find bug reports with a title containing the searchTerm
+    isActive: true, // Only return active bug reports
   };
 
   if (statusFilter) {
@@ -124,8 +133,8 @@ exports.getBugReportById = async (req, res) => {
       .populate("assignedTo", "-password -__v") // Exclude password and __v fields
       .populate("createdBy", "-password -__v"); // Exclude password and __v fields
 
-    // If the bug report was not found, send an appropriate error message
-    if (!bugReport) {
+    // If the bug report was not found or isActive is false, send an appropriate error message
+    if (!bugReport || !bugReport.isActive) {
       return res.status(404).json({ message: "Bug report not found" });
     }
 
@@ -162,6 +171,31 @@ exports.assignBugReport = async (req, res) => {
 
     res.status(200).json(updatedBugReport);
   } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.retireBugReport = async (req, res) => {
+  try {
+    // Try to find the bug report by ID and update the isActive field
+    const updatedBugReport = await BugReport.findByIdAndUpdate(
+      req.params.id,
+      { isActive: false },
+      {
+        new: true, // Returns the updated document
+        runValidators: true, // Validates the update operation against the schema
+      }
+    );
+
+    // If no bug report was found with the provided ID, return an error
+    if (!updatedBugReport) {
+      return res.status(404).json({ error: "Bug report not found" });
+    }
+
+    // Send the updated bug report in the response
+    res.status(200).json(updatedBugReport);
+  } catch (error) {
+    // If there was a problem, respond with the error message
     res.status(500).json({ error: error.message });
   }
 };
