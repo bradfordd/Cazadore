@@ -17,4 +17,7 @@ router.patch("/:id/assign", bugReportController.assignBugReport);
 
 router.put("/:id/retire", bugReportController.retireBugReport);
 
+// Add the route to reactivate a bug report
+router.put("/:id/reactivate", bugReportController.reactivateBugReport);
+
 module.exports = router;

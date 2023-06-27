@@ -199,3 +199,28 @@ exports.retireBugReport = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.reactivateBugReport = async (req, res) => {
+  try {
+    // Try to find the bug report by ID and update the isActive field
+    const updatedBugReport = await BugReport.findByIdAndUpdate(
+      req.params.id,
+      { isActive: true },
+      {
+        new: true, // Returns the updated document
+        runValidators: true, // Validates the update operation against the schema
+      }
+    );
+
+    // If no bug report was found with the provided ID, return an error
+    if (!updatedBugReport) {
+      return res.status(404).json({ error: "Bug report not found" });
+    }
+
+    // Send the updated bug report in the response
+    res.status(200).json(updatedBugReport);
+  } catch (error) {
+    // If there was a problem, respond with the error message
+    res.status(500).json({ error: error.message });
+  }
+};
