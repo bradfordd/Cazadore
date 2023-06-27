@@ -6,6 +6,7 @@ function BugReportDetail({ bug, goBack }) {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [pendingUser, setPendingUser] = useState("");
+  const [assignedUser, setAssignedUser] = useState(bug.assignedTo || "");
 
   // Fetch all users when component mounts
   useEffect(() => {
@@ -23,9 +24,9 @@ function BugReportDetail({ bug, goBack }) {
         bug._id,
         pendingUser
       );
-      if (updatedBug) {
-        bug.assignedTo = updatedBug.assignedTo;
-        setSelectedUser(pendingUser);
+      console.log(updatedBug);
+      if (updatedBug && updatedBug.assignedTo) {
+        setAssignedUser(updatedBug.assignedTo);
       }
     }
   };
@@ -47,8 +48,8 @@ function BugReportDetail({ bug, goBack }) {
       </p>
       <p>
         Assigned to:{" "}
-        {bug.assignedTo && bug.assignedTo.username
-          ? bug.assignedTo.username
+        {assignedUser && assignedUser.username
+          ? assignedUser.username
           : "Not Assigned"}
       </p>
 

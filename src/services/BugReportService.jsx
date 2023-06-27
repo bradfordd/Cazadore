@@ -32,9 +32,9 @@ export default {
     return response.data;
   },
   assignBugToUser: async (bugReportId, userId) => {
-    const response = await axios.put(
-      `http://localhost:5000/api/bugReports/${bugReportId}`,
-      { assignedTo: userId }
+    const response = await axios.patch(
+      `http://localhost:5000/api/bugReports/${bugReportId}/assign`,
+      { userId: userId }
     );
     return response.data;
   },

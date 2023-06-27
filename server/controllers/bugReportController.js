@@ -153,7 +153,7 @@ exports.assignBugReport = async (req, res) => {
         new: true, // option that returns the new version of the updated document
         runValidators: true, // validates the update operation against the model's schema
       }
-    );
+    ).populate("assignedTo", "_id username"); // Populate the 'assignedTo' field
 
     // If no bug report was found with the provided ID, return an error
     if (!updatedBugReport) {
