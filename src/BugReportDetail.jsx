@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
 import UserService from "./services/UserService";
 import BugReportService from "./services/BugReportService";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 function BugReportDetail({ bug, goBack }) {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [pendingUser, setPendingUser] = useState("");
   const [assignedUser, setAssignedUser] = useState(bug.assignedTo || "");
+  const [showModal, setShowModal] = useState(false);
+
+  const handleClose = () => setShowModal(false);
+  const handleShow = () => setShowModal(true);
 
   // Fetch all users when component mounts
   useEffect(() => {
@@ -33,6 +39,7 @@ function BugReportDetail({ bug, goBack }) {
 
   const retireBug = async () => {
     await BugReportService.retireBugReport(bug._id);
+    handleClose();
     goBack();
   };
 
@@ -76,7 +83,24 @@ function BugReportDetail({ bug, goBack }) {
       </label>
       <button onClick={assignBug}>Assign</button>
       <button onClick={goBack}>Back to List</button>
-      <button onClick={retireBug}>Retire Bug Report</button>
+      <button onClick={handleShow}>Retire Bug Report</button>
+
+      <Modal show={showModal} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Retire Bug Report</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to retire this bug report?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            No
+          </Button>
+          <Button variant="primary" onClick={retireBug}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
