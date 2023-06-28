@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import BugReportService from "./services/BugReportService";
-import BugReportDetail from "./BugReportDetail";
+import BugReportService from "../../services/BugReportService";
+import BugReportDetail from "../BugReportDetail/BugReportDetail";
 
 function BugReportList() {
   const [bugReports, setBugReports] = useState([]);

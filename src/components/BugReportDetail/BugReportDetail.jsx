@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import UserService from "./services/UserService";
-import BugReportService from "./services/BugReportService";
+import UserService from "../../services/UserService";
+import BugReportService from "../../services/BugReportService";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 

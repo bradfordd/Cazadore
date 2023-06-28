@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import "./Register.css";
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "./Navbar";
+import Navbar from "../Navbar/Navbar";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import BugReportList from "./BugReportList"; // adjust the path as necessary
+import BugReportList from "../BugReportList/BugReportList"; // adjust the path as necessary
 
 const Homepage = () => {
   const [isLoading, setIsLoading] = useState(true);
