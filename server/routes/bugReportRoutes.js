@@ -20,4 +20,6 @@ router.put("/:id/retire", bugReportController.retireBugReport);
 // Add the route to reactivate a bug report
 router.put("/:id/reactivate", bugReportController.reactivateBugReport);
 
+router.patch("/:id/addComment", bugReportController.addCommentToBugReport);
+
 module.exports = router;

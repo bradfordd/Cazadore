@@ -70,7 +70,7 @@ exports.loginUser = async (req, res) => {
     // Check password
     if (await bcrypt.compare(req.body.password, user.password)) {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
-        expiresIn: "1h",
+        expiresIn: "24h",
       });
       // Setting the HTTP cookie with the token
       res.cookie("token", token, {

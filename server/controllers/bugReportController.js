@@ -224,3 +224,32 @@ exports.reactivateBugReport = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.addCommentToBugReport = async (req, res) => {
+  try {
+    // extract data from request
+    const { commentText } = req.body;
+    const { id } = req.params;
+    const userId = req._id; // Assuming you have a middleware to attach user to request object
+
+    // get bug report
+    const bugReport = await BugReport.findById(id);
+
+    if (!bugReport) {
+      return res.status(404).json({ message: "Bug report not found" });
+    }
+
+    // add comment to bug report
+    bugReport.comments.push({
+      text: commentText,
+      postedBy: userId,
+    });
+
+    // save bug report
+    const updatedBugReport = await bugReport.save();
+
+    res.status(200).json(updatedBugReport);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
