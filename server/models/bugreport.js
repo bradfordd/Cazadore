@@ -51,7 +51,8 @@ const bugReportSchema = new mongoose.Schema(
     },
     comments: [
       {
-        author: {
+        postedBy: {
+          // change 'author' to 'postedBy'
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
         },

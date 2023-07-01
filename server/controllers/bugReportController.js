@@ -225,6 +225,32 @@ exports.reactivateBugReport = async (req, res) => {
   }
 };
 
+exports.getBugReportById = async (req, res) => {
+  try {
+    const bugReport = await BugReport.findById(req.params.id)
+      .populate("assignedTo", "-password -__v") // Exclude password and __v fields
+      .populate("createdBy", "-password -__v") // Exclude password and __v fields
+      .populate({
+        path: "comments",
+        populate: {
+          path: "postedBy",
+          select: "username -_id", // only include the username of the commenter
+        },
+      });
+
+    // If the bug report was not found or isActive is false, send an appropriate error message
+    if (!bugReport || !bugReport.isActive) {
+      return res.status(404).json({ message: "Bug report not found" });
+    }
+
+    // send success response
+    res.status(200).json(bugReport);
+  } catch (error) {
+    // send error response
+    res.status(500).json({ error: error.message });
+  }
+};
+
 exports.addCommentToBugReport = async (req, res) => {
   try {
     // extract data from request
@@ -241,7 +267,7 @@ exports.addCommentToBugReport = async (req, res) => {
 
     // add comment to bug report
     bugReport.comments.push({
-      text: commentText,
+      content: commentText, // <-- changed to content
       postedBy: userId,
     });
 
