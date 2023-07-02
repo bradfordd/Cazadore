@@ -3,6 +3,7 @@
 const express = require("express");
 const bugReportController = require("../controllers/bugReportController");
 const router = express.Router();
+const authenticateJWT = require("../middleware/authenticateJWT");
 
 router.post("/create", bugReportController.createBugReport);
 
@@ -20,6 +21,10 @@ router.put("/:id/retire", bugReportController.retireBugReport);
 // Add the route to reactivate a bug report
 router.put("/:id/reactivate", bugReportController.reactivateBugReport);
 
-router.patch("/:id/addComment", bugReportController.addCommentToBugReport);
+router.patch(
+  "/:id/addComment",
+  authenticateJWT,
+  bugReportController.addCommentToBugReport
+);
 
 module.exports = router;

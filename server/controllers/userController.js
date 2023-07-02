@@ -60,30 +60,42 @@ exports.registerNewUser = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
+  console.log("Environment: ", process.env.NODE_ENV);
+  console.log("Login attempt received. User: ", req.body.username);
+
   // Find user
   const user = await User.findOne({ username: req.body.username });
+
   if (user == null) {
+    console.log("No user found for username: ", req.body.username);
     return res.status(400).json({ message: "Cannot find user" });
   }
 
   try {
     // Check password
     if (await bcrypt.compare(req.body.password, user.password)) {
+      console.log("Password match for user: ", user.username);
+
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
         expiresIn: "24h",
       });
+
+      console.log("Token generated: ", token);
+
       // Setting the HTTP cookie with the token
       res.cookie("token", token, {
         httpOnly: true,
         sameSite: "Lax",
-        secure: process.env.NODE_ENV === "production",
+        secure: false,
       });
 
       res.status(200).json({ message: "Login successful" });
     } else {
+      console.log("Password mismatch for user: ", user.username);
       res.status(403).json({ message: "Not Allowed" }); // Unauthorized access
     }
   } catch (err) {
+    console.log("Error during login attempt: ", err.message);
     res.status(500).json({ message: err.message });
   }
 };

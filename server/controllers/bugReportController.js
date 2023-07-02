@@ -253,29 +253,40 @@ exports.getBugReportById = async (req, res) => {
 
 exports.addCommentToBugReport = async (req, res) => {
   try {
+    console.log("Request received");
+    console.log("Request body: ", req.body);
+    console.log("Request params: ", req.params);
+    console.log("User ID from JWT: ", req._id);
+
     // extract data from request
     const { commentText } = req.body;
     const { id } = req.params;
-    const userId = req._id; // Assuming you have a middleware to attach user to request object
+    const userId = req._id;
 
+    console.log("Fetching bug report with id: ", id);
     // get bug report
     const bugReport = await BugReport.findById(id);
 
     if (!bugReport) {
+      console.log("Bug report not found");
       return res.status(404).json({ message: "Bug report not found" });
     }
 
+    console.log("Adding comment to bug report");
     // add comment to bug report
     bugReport.comments.push({
-      content: commentText, // <-- changed to content
+      content: commentText,
       postedBy: userId,
     });
 
+    console.log("Saving updated bug report");
     // save bug report
     const updatedBugReport = await bugReport.save();
 
+    console.log("Returning updated bug report");
     res.status(200).json(updatedBugReport);
   } catch (error) {
+    console.log("Error: ", error);
     res.status(500).json({ error: error.message });
   }
 };

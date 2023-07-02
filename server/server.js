@@ -4,11 +4,14 @@ const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes"); // import the user routes
 const bugReportRoutes = require("./routes/bugReportRoutes"); // import the bug report routes
 const cors = require("cors");
+const morgan = require("morgan");
 const cookieParser = require("cookie-parser"); // import the cookie-parser
 const authenticateJWT = require("./middleware/authenticateJWT");
 require("dotenv").config({ path: "../.env" });
 
 const app = express();
+
+app.use(morgan("combined"));
 
 app.use(
   cors({
