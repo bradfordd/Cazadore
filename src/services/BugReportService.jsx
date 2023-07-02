@@ -50,4 +50,13 @@ export default {
     );
     return response.data;
   },
+
+  addCommentToBugReport: async (bugReportId, commentText) => {
+    const response = await axios.patch(
+      `http://localhost:5000/api/bugReports/${bugReportId}/addComment`,
+      { commentText },
+      { withCredentials: true }
+    );
+    return response.data;
+  },
 };

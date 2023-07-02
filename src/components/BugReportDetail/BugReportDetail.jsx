@@ -10,19 +10,21 @@ function BugReportDetail({ bug, goBack }) {
   const [pendingUser, setPendingUser] = useState("");
   const [assignedUser, setAssignedUser] = useState(bug.assignedTo || "");
   const [showModal, setShowModal] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [newCommentText, setNewCommentText] = useState("");
 
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
 
   // Fetch all users when component mounts
   useEffect(() => {
-    async function fetchUsers() {
-      const fetchedUsers = await UserService.getAllUsers();
-      setUsers(fetchedUsers);
+    async function fetchBug() {
+      const bugReport = await BugReportService.getBugReportById(bug._id);
+      setComments(bugReport.comments);
     }
 
-    fetchUsers();
-  }, []);
+    fetchBug();
+  }, [bug._id]);
 
   const assignBug = async () => {
     if (pendingUser) {
@@ -34,6 +36,17 @@ function BugReportDetail({ bug, goBack }) {
       if (updatedBug && updatedBug.assignedTo) {
         setAssignedUser(updatedBug.assignedTo);
       }
+    }
+  };
+
+  const addComment = async () => {
+    const updatedBug = await BugReportService.addCommentToBugReport(
+      bug._id,
+      newCommentText
+    );
+    if (updatedBug && updatedBug.comments) {
+      setComments(updatedBug.comments);
+      setNewCommentText(""); // Clear the new comment text
     }
   };
 
@@ -101,6 +114,30 @@ function BugReportDetail({ bug, goBack }) {
           </Button>
         </Modal.Footer>
       </Modal>
+      {comments.length > 0 && (
+        <div>
+          <h2>Comments</h2>
+          {comments.map((comment, index) => (
+            <div key={index}>
+              <p>{comment.content}</p>
+              <p>Posted by: {comment.postedBy.username}</p>
+            </div>
+          ))}
+        </div>
+      )}
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          addComment();
+        }}
+      >
+        <textarea
+          value={newCommentText}
+          onChange={(event) => setNewCommentText(event.target.value)}
+          placeholder="Add a comment"
+        />
+        <button type="submit">Submit</button>
+      </form>
     </div>
   );
 }
