@@ -300,3 +300,34 @@ exports.addCommentToBugReport = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.deleteCommentFromBugReport = async (req, res) => {
+  try {
+    const bugReportId = req.params.bugReportId;
+    const commentId = req.params.commentId;
+
+    const bugReport = await BugReport.findById(bugReportId);
+    if (!bugReport) {
+      return res.status(404).json({ error: "Bug report not found" });
+    }
+
+    const comment = bugReport.comments.id(commentId);
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    // Only the comment author or a user with a certain role can delete the comment
+    if (req._id !== comment.postedBy.toString()) {
+      return res
+        .status(403)
+        .json({ error: "You don't have permission to delete this comment" });
+    }
+
+    // Pull the comment from the comments array
+    bugReport.comments.pull(commentId);
+    const updatedBugReport = await bugReport.save();
+    res.status(200).json(updatedBugReport);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

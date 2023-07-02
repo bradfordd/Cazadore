@@ -27,4 +27,10 @@ router.patch(
   bugReportController.addCommentToBugReport
 );
 
+router.delete(
+  "/:bugReportId/comments/:commentId",
+  authenticateJWT,
+  bugReportController.deleteCommentFromBugReport
+);
+
 module.exports = router;
