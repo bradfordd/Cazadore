@@ -272,6 +272,16 @@ exports.addCommentToBugReport = async (req, res) => {
       return res.status(404).json({ message: "Bug report not found" });
     }
 
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      console.log("User found in database: ", user);
+    } catch (error) {
+      console.log("Error: ", error);
+      res.status(500).json({ error: error.message });
+    }
     console.log("Adding comment to bug report");
     // add comment to bug report
     bugReport.comments.push({
