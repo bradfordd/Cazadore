@@ -59,4 +59,11 @@ export default {
     );
     return response.data;
   },
+  deleteCommentFromBugReport: async (bugReportId, commentId) => {
+    const response = await axios.delete(
+      `http://localhost:5000/api/bugReports/${bugReportId}/comments/${commentId}`,
+      { withCredentials: true }
+    );
+    return response.data;
+  },
 };

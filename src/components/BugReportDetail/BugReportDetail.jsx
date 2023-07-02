@@ -3,6 +3,7 @@ import UserService from "../../services/UserService";
 import BugReportService from "../../services/BugReportService";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import jwt_decode from "jwt-decode";
 
 function BugReportDetail({ bug, goBack }) {
   const [users, setUsers] = useState([]);
@@ -17,7 +18,25 @@ function BugReportDetail({ bug, goBack }) {
   const handleShow = () => setShowModal(true);
 
   // Fetch all users when component mounts
+
   useEffect(() => {
+    const allCookies = document.cookie;
+    console.log(allCookies);
+    console.log("Document.cookie");
+    console.log(document.cookie);
+    const tokenCookie = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token="));
+
+    if (tokenCookie) {
+      const token = tokenCookie.split("=")[1];
+      const decodedToken = jwt_decode(token);
+      const userId = decodedToken.id;
+      console.log("User Id: ", userId);
+    } else {
+      console.log("Token cookie not found");
+    }
+
     async function fetchBug() {
       const bugReport = await BugReportService.getBugReportById(bug._id);
       setComments(bugReport.comments);
@@ -54,6 +73,16 @@ function BugReportDetail({ bug, goBack }) {
     await BugReportService.retireBugReport(bug._id);
     handleClose();
     goBack();
+  };
+
+  const deleteComment = async (commentId) => {
+    const updatedBug = await BugReportService.deleteCommentFromBugReport(
+      bug._id,
+      commentId
+    );
+    if (updatedBug && updatedBug.comments) {
+      setComments(updatedBug.comments);
+    }
   };
 
   return (

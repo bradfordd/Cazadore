@@ -108,3 +108,16 @@ exports.getAllUsers = async (req, res) => {
     return res.status(500).json({ message: err.message });
   }
 };
+
+exports.getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req._id, "username _id");
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
