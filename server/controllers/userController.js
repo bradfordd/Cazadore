@@ -48,9 +48,9 @@ exports.registerNewUser = async (req, res) => {
     });
     // Here we are using the cookie-parser middleware to set a HttpOnly cookie
     res.cookie("token", token, {
-      httpOnly: true,
+      httpOnly: false,
       sameSite: "Lax",
-      secure: process.env.NODE_ENV === "production",
+      secure: false,
     });
 
     res.status(201).json({ newUser });
@@ -84,7 +84,7 @@ exports.loginUser = async (req, res) => {
 
       // Setting the HTTP cookie with the token
       res.cookie("token", token, {
-        httpOnly: true,
+        httpOnly: false,
         sameSite: "Lax",
         secure: false,
       });

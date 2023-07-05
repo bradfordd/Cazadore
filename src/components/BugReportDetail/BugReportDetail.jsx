@@ -7,12 +7,12 @@ import jwt_decode from "jwt-decode";
 
 function BugReportDetail({ bug, goBack }) {
   const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState("");
   const [pendingUser, setPendingUser] = useState("");
   const [assignedUser, setAssignedUser] = useState(bug.assignedTo || "");
   const [showModal, setShowModal] = useState(false);
   const [comments, setComments] = useState([]);
   const [newCommentText, setNewCommentText] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
 
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
@@ -20,27 +20,40 @@ function BugReportDetail({ bug, goBack }) {
   // Fetch all users when component mounts
 
   useEffect(() => {
+    console.log("useEffect triggered");
+
     const allCookies = document.cookie;
-    console.log(allCookies);
-    console.log("Document.cookie");
-    console.log(document.cookie);
+    console.log("All cookies: ", allCookies);
+
+    const fetchCurrentUser = async () => {
+      console.log("fetchCurrentUser triggered");
+      const user = await UserService.getCurrentUser();
+      console.log("Fetched user: ", user);
+      setCurrentUser(user);
+    };
+
+    fetchCurrentUser();
+
     const tokenCookie = document.cookie
       .split("; ")
       .find((row) => row.startsWith("token="));
 
     if (tokenCookie) {
       const token = tokenCookie.split("=")[1];
+      console.log("Token: ", token);
       const decodedToken = jwt_decode(token);
       const userId = decodedToken.id;
-      console.log("User Id: ", userId);
+      console.log("Decoded token ID: ", userId);
     } else {
       console.log("Token cookie not found");
     }
 
-    async function fetchBug() {
+    const fetchBug = async () => {
+      console.log("fetchBug triggered");
       const bugReport = await BugReportService.getBugReportById(bug._id);
+      console.log("Fetched bug report: ", bugReport);
       setComments(bugReport.comments);
-    }
+    };
 
     fetchBug();
   }, [bug._id]);
@@ -150,6 +163,13 @@ function BugReportDetail({ bug, goBack }) {
             <div key={index}>
               <p>{comment.content}</p>
               <p>Posted by: {comment.postedBy.username}</p>
+              // Show the delete button only if the current user's ID matches
+              the comment's user ID
+              {currentUser._id === comment.postedBy._id && (
+                <button onClick={() => deleteComment(comment._id)}>
+                  Delete
+                </button>
+              )}
             </div>
           ))}
         </div>
