@@ -242,7 +242,7 @@ exports.addCommentToBugReport = async (req, res) => {
     // extract data from request
     const { commentText } = req.body;
     const { id } = req.params;
-    const userId = req._id;
+    const userId = req.user._id;
 
     console.log("Fetching bug report with id: ", id);
     // get bug report
@@ -283,22 +283,32 @@ exports.addCommentToBugReport = async (req, res) => {
 };
 
 exports.deleteCommentFromBugReport = async (req, res) => {
+  console.log("Deleting comment from bug report...");
+
   try {
     const bugReportId = req.params.bugReportId;
     const commentId = req.params.commentId;
 
+    console.log(`Bug report ID: ${bugReportId}, Comment ID: ${commentId}`);
+
     const bugReport = await BugReport.findById(bugReportId);
     if (!bugReport) {
+      console.log("Bug report not found.");
       return res.status(404).json({ error: "Bug report not found" });
     }
 
     const comment = bugReport.comments.id(commentId);
     if (!comment) {
+      console.log("Comment not found.");
       return res.status(404).json({ error: "Comment not found" });
     }
 
+    console.log(`Comment posted by: ${comment.postedBy.toString()}`);
+
+    console.log(req.user._id.toString());
     // Only the comment author or a user with a certain role can delete the comment
-    if (req._id !== comment.postedBy.toString()) {
+    if (req.user._id.toString() !== comment.postedBy.toString()) {
+      console.log("User doesn't have permission to delete this comment.");
       return res
         .status(403)
         .json({ error: "You don't have permission to delete this comment" });
@@ -306,9 +316,14 @@ exports.deleteCommentFromBugReport = async (req, res) => {
 
     // Pull the comment from the comments array
     bugReport.comments.pull(commentId);
+    console.log("Comment pulled from bug report.");
+
     const updatedBugReport = await bugReport.save();
+    console.log("Updated bug report: ", updatedBugReport);
+
     res.status(200).json(updatedBugReport);
   } catch (error) {
+    console.error("Error occurred while deleting comment: ", error.message);
     res.status(500).json({ error: error.message });
   }
 };

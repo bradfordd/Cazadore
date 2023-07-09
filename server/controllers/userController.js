@@ -4,7 +4,6 @@ const validator = require("../validators/userValidator");
 const jwt = require("jsonwebtoken");
 
 exports.registerNewUser = async (req, res) => {
-  // Validate the username and password
   const existingUser = await User.findOne({ username: req.body.username });
   if (existingUser) {
     return res.status(400).json({ message: "Username already exists" });
@@ -16,7 +15,6 @@ exports.registerNewUser = async (req, res) => {
     req.body.password
   );
 
-  // If either validation fails, send an error message back to the client
   if (usernameValidationResult !== true) {
     return res.status(400).json({ message: usernameValidationResult });
   }
@@ -24,31 +22,23 @@ exports.registerNewUser = async (req, res) => {
     return res.status(400).json({ message: passwordValidationResult });
   }
 
-  // Hash the password before storing it
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-  // Testing bcrypt hashing and comparison
-
   const match = await bcrypt.compare(req.body.password, hashedPassword);
-  // End of testing bcrypt hashing and comparison
 
-  // Create a new user
-  console.log("Creating new user..."); // Log when starting to create new user
+  console.log("Creating new user...");
   const user = new User({
     username: req.body.username,
     password: hashedPassword,
   });
 
-  // Save user to the database
   try {
-    // ... (omitted for brevity) ...
     const newUser = await user.save();
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_KEY, {
       expiresIn: "1h",
     });
-    // Here we are using the cookie-parser middleware to set a HttpOnly cookie
     res.cookie("token", token, {
-      httpOnly: false,
+      httpOnly: true,
       sameSite: "Lax",
       secure: false,
     });
@@ -63,7 +53,6 @@ exports.loginUser = async (req, res) => {
   console.log("Environment: ", process.env.NODE_ENV);
   console.log("Login attempt received. User: ", req.body.username);
 
-  // Find user
   const user = await User.findOne({ username: req.body.username });
 
   if (user == null) {
@@ -72,7 +61,6 @@ exports.loginUser = async (req, res) => {
   }
 
   try {
-    // Check password
     if (await bcrypt.compare(req.body.password, user.password)) {
       console.log("Password match for user: ", user.username);
 
@@ -82,9 +70,8 @@ exports.loginUser = async (req, res) => {
 
       console.log("Token generated: ", token);
 
-      // Setting the HTTP cookie with the token
       res.cookie("token", token, {
-        httpOnly: false,
+        httpOnly: true,
         sameSite: "Lax",
         secure: false,
       });
@@ -102,7 +89,7 @@ exports.loginUser = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}, "username _id"); // Get all users with just 'username' and '_id' fields
+    const users = await User.find({}, "username _id");
     return res.status(200).json(users);
   } catch (err) {
     return res.status(500).json({ message: err.message });
@@ -110,14 +97,19 @@ exports.getAllUsers = async (req, res) => {
 };
 
 exports.getCurrentUser = async (req, res) => {
+  console.log("Getting current user...");
   try {
-    const user = await User.findById(req._id, "username _id");
+    console.log("Looking up user with ID: ", req._id);
+    const user = await User.findById(req.user._id, "username _id");
     if (user) {
+      console.log("Found user: ", user);
       res.status(200).json(user);
     } else {
+      console.log("User not found for ID: ", req.user._id);
       res.status(404).json({ message: "User not found" });
     }
   } catch (err) {
+    console.error("Error occurred while fetching user: ", err.message);
     res.status(500).json({ message: err.message });
   }
 };
