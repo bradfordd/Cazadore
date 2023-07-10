@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 import jwt_decode from "jwt-decode";
 
 function BugReportDetail({ bug, goBack }) {
-  const [users, setUsers] = useState([]);
+  const [users] = useState([]);
   const [pendingUser, setPendingUser] = useState("");
   const [assignedUser, setAssignedUser] = useState(bug.assignedTo || "");
   const [showModal, setShowModal] = useState(false);
@@ -20,15 +20,11 @@ function BugReportDetail({ bug, goBack }) {
   // Fetch all users when component mounts
 
   useEffect(() => {
-    console.log("useEffect triggered");
-
     const allCookies = document.cookie;
-    console.log("All cookies: ", allCookies);
 
     const fetchCurrentUser = async () => {
-      console.log("fetchCurrentUser triggered");
       const user = await UserService.getCurrentUser();
-      console.log("Fetched user: ", user);
+      console.log("Assigning current user");
       setCurrentUser(user);
     };
 
@@ -119,27 +115,31 @@ function BugReportDetail({ bug, goBack }) {
           ? assignedUser.username
           : "Not Assigned"}
       </p>
-
-      <label>
-        Assign to:
-        <select
-          value={pendingUser}
-          onChange={(event) => {
-            setPendingUser(event.target.value);
-          }}
-        >
-          <option value="">Select a user</option>
-          {users.map((user) => (
-            <option key={user._id} value={user._id}>
-              {user.username}
-            </option>
-          ))}
-        </select>
-      </label>
-      <button onClick={assignBug}>Assign</button>
-      <button onClick={goBack}>Back to List</button>
+      {console.log("Bug: ", bug)}
+      {console.log("CurrentUser: ", currentUser)}
+      {bug && currentUser && currentUser._id === bug.createdBy._id && (
+        <>
+          <label>
+            Assign to:
+            <select
+              value={pendingUser}
+              onChange={(event) => {
+                setPendingUser(event.target.value);
+              }}
+            >
+              <option value="">Select a user</option>
+              {users.map((user) => (
+                <option key={user._id} value={user._id}>
+                  {user.username}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button onClick={assignBug}>Assign</button>
+        </>
+      )}
+      )<button onClick={goBack}>Back to List</button>
       <button onClick={handleShow}>Retire Bug Report</button>
-
       <Modal show={showModal} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Retire Bug Report</Modal.Title>
