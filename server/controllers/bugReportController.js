@@ -158,25 +158,52 @@ exports.assignBugReport = async (req, res) => {
 
 exports.retireBugReport = async (req, res) => {
   try {
-    // Try to find the bug report by ID and update the isActive field
-    const updatedBugReport = await BugReport.findByIdAndUpdate(
-      req.params.id,
-      { isActive: false },
-      {
-        new: true, // Returns the updated document
-        runValidators: true, // Validates the update operation against the schema
-      }
-    );
+    // Fetch the bug report from the database
+    const bugReport = await BugReport.findById(req.params.id);
 
     // If no bug report was found with the provided ID, return an error
-    if (!updatedBugReport) {
+    if (!bugReport) {
       return res.status(404).json({ error: "Bug report not found" });
     }
+
+    // If the user is authorized, retire the bug report
+    bugReport.status = "Closed";
+    bugReport.isActive = false;
+    const updatedBugReport = await bugReport.save();
 
     // Send the updated bug report in the response
     res.status(200).json(updatedBugReport);
   } catch (error) {
     // If there was a problem, respond with the error message
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.closeBugReport = async (req, res) => {
+  console.log("closeBugReport function called");
+
+  try {
+    // Fetch the bug report from the database
+    console.log("Fetching bug report with ID:", req.params.id);
+    const bugReport = await BugReport.findById(req.params.id);
+
+    // If no bug report was found with the provided ID, return an error
+    if (!bugReport) {
+      console.log("Bug report not found");
+      return res.status(404).json({ error: "Bug report not found" });
+    }
+
+    // If the user is authorized, retire the bug report
+    console.log("Changing bug report status to 'Closed'");
+    bugReport.status = "Closed";
+    const updatedBugReport = await bugReport.save();
+    console.log("Bug report successfully updated:", updatedBugReport);
+
+    // Send the updated bug report in the response
+    res.status(200).json(updatedBugReport);
+  } catch (error) {
+    // If there was a problem, respond with the error message
+    console.log("Error occurred:", error.message);
     res.status(500).json({ error: error.message });
   }
 };

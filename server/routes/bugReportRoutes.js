@@ -4,6 +4,7 @@ const express = require("express");
 const bugReportController = require("../controllers/bugReportController");
 const router = express.Router();
 const authenticateJWT = require("../middleware/authenticateJWT");
+const authorizeBugReportRetirement = require("../middleware/authorizeBugReportRetirement");
 
 router.post("/create", bugReportController.createBugReport);
 
@@ -15,8 +16,6 @@ router.get("/:id", bugReportController.getBugReportById);
 router.put("/:id", bugReportController.updateBugReport);
 
 router.patch("/:id/assign", bugReportController.assignBugReport);
-
-router.put("/:id/retire", bugReportController.retireBugReport);
 
 // Add the route to reactivate a bug report
 router.put("/:id/reactivate", bugReportController.reactivateBugReport);
@@ -31,6 +30,20 @@ router.delete(
   "/:bugReportId/comments/:commentId",
   authenticateJWT,
   bugReportController.deleteCommentFromBugReport
+);
+
+router.put(
+  "/:id/retire",
+  authenticateJWT,
+  authorizeBugReportRetirement,
+  bugReportController.retireBugReport
+);
+
+router.put(
+  "/:id/close",
+  authenticateJWT,
+  authorizeBugReportRetirement,
+  bugReportController.closeBugReport
 );
 
 module.exports = router;

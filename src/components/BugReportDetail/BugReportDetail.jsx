@@ -136,10 +136,10 @@ function BugReportDetail({ bug, goBack }) {
             </select>
           </label>
           <button onClick={assignBug}>Assign</button>
+          <button onClick={handleShow}>Retire Bug Report</button>
         </>
       )}
       )<button onClick={goBack}>Back to List</button>
-      <button onClick={handleShow}>Retire Bug Report</button>
       <Modal show={showModal} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Retire Bug Report</Modal.Title>
@@ -165,11 +165,13 @@ function BugReportDetail({ bug, goBack }) {
               <p>Posted by: {comment.postedBy.username}</p>
               // Show the delete button only if the current user's ID matches
               the comment's user ID
-              {currentUser._id === comment.postedBy._id && (
-                <button onClick={() => deleteComment(comment._id)}>
-                  Delete
-                </button>
-              )}
+              {bug &&
+                currentUser &&
+                currentUser._id === comment.postedBy._id && (
+                  <button onClick={() => deleteComment(comment._id)}>
+                    Delete
+                  </button>
+                )}
             </div>
           ))}
         </div>
