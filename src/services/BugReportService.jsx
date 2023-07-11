@@ -40,7 +40,17 @@ export default {
   },
   retireBugReport: async (bugReportId) => {
     const response = await axios.put(
-      `http://localhost:5000/api/bugReports/${bugReportId}/retire`
+      `http://localhost:5000/api/bugReports/${bugReportId}/retire`,
+      {}, // Empty payload
+      { withCredentials: true } // Config
+    );
+    return response.data;
+  },
+  closeBugReport: async (bugReportId) => {
+    const response = await axios.put(
+      `http://localhost:5000/api/bugReports/${bugReportId}/close`,
+      {}, // Empty payload
+      { withCredentials: true } // Config
     );
     return response.data;
   },
