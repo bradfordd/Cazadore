@@ -141,6 +141,57 @@ const projectController = {
       res.status(500).json({ message: err.message });
     }
   },
+  // Add a member to a project
+  addMemberToProject: async (req, res) => {
+    try {
+      console.log(
+        `Attempting to add member ${req.body.newMember} to project ${req.params.id}`
+      );
+      const project = await Project.findById(req.params.id);
+
+      if (project == null) {
+        console.log(`No project found with the ID: ${req.params.id}`);
+        return res.status(404).json({ message: "Cannot find project" });
+      }
+
+      if (
+        project.createdBy.toString() !== req.user.id &&
+        req.user.role !== "Admin"
+      ) {
+        console.log(
+          `User ${req.user.id} doesn't have permission to add a member to this project`
+        );
+        return res.status(403).json({
+          message: "You do not have permission to add a member to this project",
+        });
+      }
+
+      // Check if the user to be added is already a member of the project
+      if (project.teamMembers.includes(req.body.newMember)) {
+        console.log(
+          `User ${req.body.newMember} is already a member of the project`
+        );
+        return res.status(400).json({
+          message: "User is already a member of this project",
+        });
+      }
+
+      // Add new member to the project
+      project.teamMembers.push(req.body.newMember);
+
+      console.log(`Adding member ${req.body.newMember} to project...`);
+      const updatedProject = await project.save();
+      console.log("Member added successfully.");
+
+      res.json(updatedProject);
+    } catch (err) {
+      console.log(
+        "An error occurred during the member addition process: ",
+        err.message
+      );
+      res.status(500).json({ message: err.message });
+    }
+  },
 };
 
 module.exports = projectController;
