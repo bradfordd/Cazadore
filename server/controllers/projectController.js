@@ -141,6 +141,7 @@ const projectController = {
       res.status(500).json({ message: err.message });
     }
   },
+
   // Add a member to a project
   addMemberToProject: async (req, res) => {
     try {
@@ -155,7 +156,7 @@ const projectController = {
       }
 
       if (
-        project.createdBy.toString() !== req.user.id &&
+        project.projectManager.toString() !== req.user.id &&
         req.user.role !== "Admin"
       ) {
         console.log(
@@ -180,6 +181,14 @@ const projectController = {
       project.teamMembers.push(req.body.newMember);
 
       console.log(`Adding member ${req.body.newMember} to project...`);
+
+      // Find user and update their participatingProjects field
+      const user = await User.findById(req.body.newMember);
+      if (user) {
+        user.participatingProjects.push(req.params.id);
+        await user.save();
+      }
+
       const updatedProject = await project.save();
       console.log("Member added successfully.");
 

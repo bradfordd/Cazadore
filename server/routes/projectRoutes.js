@@ -22,4 +22,11 @@ router.put("/:id", authorizeProjectUpdate, projectController.updateProject);
 // Delete a specific project
 router.delete("/:id", authorizeProjectUpdate, projectController.deleteProject);
 
+// Add a member to a specific project
+router.put(
+  "/:id/addMember",
+  authorizeProjectUpdate,
+  projectController.addMemberToProject
+);
+
 module.exports = router;

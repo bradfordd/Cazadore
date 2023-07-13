@@ -12,12 +12,12 @@ async function authorizeProjectUpdate(req, res, next) {
     return res.status(404).json({ error: "Project not found" });
   }
 
-  // Check if the authenticated user is the creator of the project or an admin
-  console.log("Comparing project creator ID and authenticated user ID");
-  console.log("Project creator ID: ", project.createdBy);
+  // Check if the authenticated user is the project manager of the project or an admin
+  console.log("Comparing project manager ID and authenticated user ID");
+  console.log("Project manager ID: ", project.projectManager);
   console.log("Authenticated user ID: ", req.user._id);
   if (
-    String(project.createdBy) !== String(req.user._id) &&
+    String(project.projectManager) !== String(req.user._id) &&
     req.user.role !== "Admin"
   ) {
     console.log("User not authorized to update this project");
