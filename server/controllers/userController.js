@@ -53,6 +53,7 @@ exports.loginUser = async (req, res) => {
   console.log("Environment: ", process.env.NODE_ENV);
   console.log("Login attempt received. User: ", req.body.username);
 
+  console.log("Attempting to find user in database...");
   const user = await User.findOne({ username: req.body.username });
 
   if (user == null) {
@@ -60,16 +61,19 @@ exports.loginUser = async (req, res) => {
     return res.status(400).json({ message: "Cannot find user" });
   }
 
+  console.log("User found, attempting to compare passwords...");
   try {
     if (await bcrypt.compare(req.body.password, user.password)) {
       console.log("Password match for user: ", user.username);
 
+      console.log("Passwords match, generating token...");
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
         expiresIn: "24h",
       });
 
       console.log("Token generated: ", token);
 
+      console.log("Setting cookie and sending response...");
       res.cookie("token", token, {
         httpOnly: true,
         sameSite: "Lax",
