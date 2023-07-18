@@ -15,6 +15,7 @@ const Register = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [formError, setFormError] = useState("");
+  const [role, setRole] = useState("developer");
 
   const usernameTippyRef = useRef();
   const passwordTippyRef = useRef();
@@ -52,6 +53,10 @@ const Register = () => {
     } else {
       setConfirmPasswordError("");
     }
+  };
+
+  const handleRoleChange = (event) => {
+    setRole(event.target.value);
   };
 
   const validateUsername = (username) => {
@@ -119,6 +124,11 @@ const Register = () => {
     validateUsername(username);
     validatePassword(password);
 
+    if (!role) {
+      setFormError("Please select a role.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       setFormError("Passwords do not match.");
       return; // don't submit the form if the passwords don't match
@@ -152,6 +162,7 @@ const Register = () => {
             {
               username,
               password,
+              role,
             }
           );
           console.log(response);
@@ -222,6 +233,29 @@ const Register = () => {
             />
           </Tippy>
         </div>
+        <div>
+          <label>Role:</label>
+          <br />
+          <input
+            type="radio"
+            id="developer"
+            name="role"
+            value="developer"
+            onChange={handleRoleChange}
+            defaultChecked
+          />
+          <label htmlFor="developer">Developer</label>
+          <br />
+          <input
+            type="radio"
+            id="project-manager"
+            name="role"
+            value="project manager"
+            onChange={handleRoleChange}
+          />
+          <label htmlFor="project-manager">Project Manager</label>
+        </div>
+
         {formError && <p className="form-error">{formError}</p>}
         <button type="submit">Register</button>
       </form>
