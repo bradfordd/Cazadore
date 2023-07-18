@@ -26,7 +26,7 @@ async function authenticateJWT(req, res, next) {
       console.log("Verified user from token: ", user);
 
       req.user = user;
-      const userFromDb = await User.findById(req.user.id, "username _id");
+      const userFromDb = await User.findById(req.user.id, "username _id role");
 
       if (userFromDb) {
         req.user = userFromDb;

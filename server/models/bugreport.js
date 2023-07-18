@@ -54,20 +54,6 @@ const bugReportSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    comments: [
-      {
-        postedBy: {
-          // change 'author' to 'postedBy'
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-        content: String,
-        timestamp: {
-          type: Date,
-          default: Date.now,
-        },
-      },
-    ],
   },
   {
     timestamps: true, // This adds fields for creation and update timestamps

@@ -20,12 +20,6 @@ const ProjectSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
-  bugReports: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "BugReport",
-    },
-  ],
   createdAt: {
     type: Date,
     default: Date.now,

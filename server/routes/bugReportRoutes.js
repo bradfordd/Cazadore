@@ -5,31 +5,41 @@ const bugReportController = require("../controllers/bugReportController");
 const router = express.Router();
 const authenticateJWT = require("../middleware/authenticateJWT");
 const authorizeBugReportRetirement = require("../middleware/authorizeBugReportRetirement");
+const verifyCreateBugReportPermission = require("../middleware/verifyCreateBugReportPermission");
+const verifyUpdateBugReportPermission = require("../middleware/verifyUpdateBugReportPermission");
 
-router.post("/create", bugReportController.createBugReport);
+router.post(
+  "/create",
+  authenticateJWT,
+  verifyCreateBugReportPermission,
+  bugReportController.createBugReport
+);
 
 // Get all bug reports - now supports pagination via query parameters 'page' and 'limit'
 router.get("/all", bugReportController.getAllBugReports);
 
 router.get("/:id", bugReportController.getBugReportById);
 
-router.put("/:id", bugReportController.updateBugReport);
-
-router.patch("/:id/assign", bugReportController.assignBugReport);
-
-// Add the route to reactivate a bug report
-router.put("/:id/reactivate", bugReportController.reactivateBugReport);
-
-router.patch(
-  "/:id/addComment",
+router.put(
+  "/:id",
   authenticateJWT,
-  bugReportController.addCommentToBugReport
+  verifyUpdateBugReportPermission,
+  bugReportController.updateBugReport
 );
 
-router.delete(
-  "/:bugReportId/comments/:commentId",
+router.patch(
+  "/:id/assign",
   authenticateJWT,
-  bugReportController.deleteCommentFromBugReport
+  verifyUpdateBugReportPermission,
+  bugReportController.assignBugReport
+);
+
+// Add the route to reactivate a bug report
+router.put(
+  "/:id/reactivate",
+  authenticateJWT,
+  verifyUpdateBugReportPermission,
+  bugReportController.reactivateBugReport
 );
 
 router.put(

@@ -5,9 +5,7 @@ const projectController = {
   // Get all projects
   getAllProjects: async (req, res) => {
     try {
-      const projects = await Project.find()
-        .populate("createdBy", "username")
-        .populate("teamMembers", "username");
+      const projects = await Project.find();
       res.json(projects);
     } catch (err) {
       res.status(500).json({ message: err.message });
@@ -16,6 +14,34 @@ const projectController = {
 
   // Create a new project
   createProject: async (req, res) => {
+    // Validate the users
+    const userIds = [req.user.id, req.body.projectManager].concat(
+      req.body.teamMembers || []
+    );
+
+    try {
+      for (let userId of userIds) {
+        const user = await User.findById(userId);
+        if (!user) {
+          return res
+            .status(400)
+            .json({ message: `User with ID: ${userId} does not exist` });
+        }
+
+        // Additional check if the user is a project manager
+        if (
+          userId === req.body.projectManager &&
+          user.role !== "project manager"
+        ) {
+          return res.status(400).json({
+            message: `User with ID: ${userId} is not a project manager`,
+          });
+        }
+      }
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+
     const project = new Project({
       name: req.body.name,
       description: req.body.description,
@@ -25,7 +51,9 @@ const projectController = {
     });
 
     try {
+      // Save the new project
       const newProject = await project.save();
+
       res.status(201).json(newProject);
     } catch (err) {
       res.status(400).json({ message: err.message });
@@ -35,9 +63,10 @@ const projectController = {
   // Get a specific project
   getProject: async (req, res) => {
     try {
-      const project = await Project.findById(req.params.id)
-        .populate("createdBy", "username")
-        .populate("teamMembers", "username");
+      const project = await Project.findById(req.params.id).populate(
+        "teamMembers",
+        "username"
+      );
       if (project == null) {
         return res.status(404).json({ message: "Cannot find project" });
       }
@@ -63,21 +92,30 @@ const projectController = {
       console.log(
         `Found project: ${project.name}. Verifying user permissions...`
       );
-      if (
-        project.createdBy.toString() !== req.user.id &&
-        req.user.role !== "Admin"
-      ) {
-        console.log(
-          `User ${req.user.id} does not have permission to update this project.`
-        );
-        return res.status(403).json({
-          message: "You do not have permission to update this project",
-        });
-      }
 
       console.log(
         `User ${req.user.id} has permission to update this project. Checking for updates...`
       );
+
+      // List of fields this function can update
+      const updatableFields = ["name", "description", "teamMembers"];
+
+      // Iterate over fields in the request body
+      for (let field in req.body) {
+        if (!updatableFields.includes(field)) {
+          // Check if the field exists in the project schema
+          if (!Project.schema.paths[field]) {
+            return res
+              .status(400)
+              .json({ message: `Field: ${field} does not exist` });
+          } else {
+            return res.status(400).json({
+              message: `Field: ${field} cannot be updated with this API`,
+            });
+          }
+        }
+      }
+
       if (req.body.name != null) {
         console.log(`Updating project name to: ${req.body.name}`);
         project.name = req.body.name;
@@ -109,7 +147,9 @@ const projectController = {
 
   // Delete a project
   deleteProject: async (req, res) => {
+    console.log("Attempting to delete a project...");
     try {
+      console.log(`Searching for project with id: ${req.params.id}`);
       const project = await Project.findById(req.params.id);
 
       if (project == null) {
@@ -117,18 +157,15 @@ const projectController = {
         return res.status(404).json({ message: "Cannot find project" });
       }
 
-      if (
-        project.createdBy.toString() !== req.user.id &&
-        req.user.role !== "Admin"
-      ) {
-        console.log(
-          `User ${req.user.id} doesn't have permission to delete this project`
-        );
-        return res.status(403).json({
-          message: "You do not have permission to delete this project",
-        });
-      }
+      console.log(
+        `Found project: ${project.name}. Checking user permissions...`
+      );
 
+      console.log("Project Manager: ", project.projectManager);
+
+      console.log(
+        `User ${req.user.id} has permission. Proceeding with deletion...`
+      );
       await Project.deleteOne({ _id: req.params.id });
 
       console.log(`Project with ID: ${req.params.id} has been deleted.`);
@@ -155,15 +192,11 @@ const projectController = {
         return res.status(404).json({ message: "Cannot find project" });
       }
 
-      if (
-        project.projectManager.toString() !== req.user.id &&
-        req.user.role !== "Admin"
-      ) {
-        console.log(
-          `User ${req.user.id} doesn't have permission to add a member to this project`
-        );
-        return res.status(403).json({
-          message: "You do not have permission to add a member to this project",
+      // Validate the new member
+      const newMember = await User.findById(req.body.newMember);
+      if (!newMember) {
+        return res.status(400).json({
+          message: `User with ID: ${req.body.newMember} does not exist`,
         });
       }
 
@@ -181,13 +214,6 @@ const projectController = {
       project.teamMembers.push(req.body.newMember);
 
       console.log(`Adding member ${req.body.newMember} to project...`);
-
-      // Find user and update their participatingProjects field
-      const user = await User.findById(req.body.newMember);
-      if (user) {
-        user.participatingProjects.push(req.params.id);
-        await user.save();
-      }
 
       const updatedProject = await project.save();
       console.log("Member added successfully.");

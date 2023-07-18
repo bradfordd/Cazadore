@@ -1,27 +1,22 @@
 const mongoose = require("mongoose");
-const Project = require("./models/project"); // Adjust path according to your project structure
+const BugReport = require("./models/bugreport"); // adjust the path according to your project structure
 
-async function updateProjects() {
-  // Connect to your MongoDB
-  await mongoose.connect(
-    "mongodb+srv://dbradford1337:VpxKIPeVSNareSeJ@sharedcluster.qczt561.mongodb.net/?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  );
+// Replace the following with your MongoDB connection string
+const MONGODB_URI =
+  "mongodb+srv://dbradford1337:VpxKIPeVSNareSeJ@sharedcluster.qczt561.mongodb.net/?retryWrites=true&w=majority";
 
-  // Update all projects
-  await Project.updateMany(
-    {}, // select all documents
-    { $rename: { createdBy: "projectManager" } } // rename 'createdBy' to 'projectManager'
-  );
-
-  console.log("All projects updated successfully");
-  process.exit(0); // exit script
-}
-
-updateProjects().catch((error) => {
-  console.error("An error occurred during the update process: ", error);
-  process.exit(1); // exit script with an error status
-});
+mongoose
+  .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log("Connected to MongoDB...");
+    // Delete all bug reports
+    return BugReport.deleteMany({});
+  })
+  .then(() => {
+    console.log("All bug reports deleted successfully.");
+    // Close the connection to the database
+    return mongoose.connection.close();
+  })
+  .catch((err) => {
+    console.error("An error occurred:", err);
+  });

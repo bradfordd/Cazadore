@@ -1,46 +1,87 @@
 const BugReport = require("../models/bugreport");
 const User = require("../models/user");
+const Project = require("../models/project");
+
+const validateBugReportInput = (body) => {
+  const {
+    title,
+    description,
+    stepsToReproduce,
+    expectedResult,
+    actualResult,
+    createdBy,
+    priority,
+    projectId,
+  } = body;
+
+  if (
+    !title ||
+    !description ||
+    !stepsToReproduce ||
+    !expectedResult ||
+    !actualResult ||
+    !createdBy ||
+    !priority ||
+    !projectId
+  ) {
+    return false;
+  }
+
+  return true;
+};
 
 exports.updateBugReport = async (req, res) => {
   try {
-    // First, we'll validate the user ID
-    const user = await User.findById(req.body.assignedTo);
-    if (!user) {
-      return res.status(400).json({ error: "Invalid user ID" });
+    console.log("Received request to update bug report with body:", req.body);
+
+    // Define the fields we want to allow updating
+    const updateFields = [
+      "title",
+      "description",
+      "stepsToReproduce",
+      "expectedResult",
+      "actualResult",
+      "priority",
+      "assignedTo",
+    ];
+
+    // Build an object with only the provided fields
+    const updateData = {};
+    for (const field of updateFields) {
+      if (req.body[field]) {
+        updateData[field] = req.body[field];
+      }
     }
 
-    // Check if bug report is active
-    const bugReport = await BugReport.findById(req.params.id);
-    if (!bugReport || !bugReport.isActive) {
-      return res
-        .status(404)
-        .json({ error: "Bug report not found or already deleted" });
-    }
+    console.log("Data to be used for update:", updateData);
 
     // Now, we'll update the bug report
     const updatedBugReport = await BugReport.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       {
         new: true, // option that returns the new version of the updated document
         runValidators: true, // validates the update operation against the model's schema
       }
     );
 
+    console.log("Result of update operation:", updatedBugReport);
+
     // If no bug report was found with the provided ID, return an error
     if (!updatedBugReport) {
+      console.log("No bug report found with ID:", req.params.id);
       return res.status(404).json({ error: "Bug report not found" });
     }
 
     res.status(200).json(updatedBugReport);
   } catch (error) {
+    console.error("An error occurred while updating the bug report:", error);
     res.status(500).json({ error: error.message });
   }
 };
 
 exports.createBugReport = async (req, res) => {
   try {
-    // extract data from request
     const {
       title,
       description,
@@ -49,7 +90,35 @@ exports.createBugReport = async (req, res) => {
       actualResult,
       priority,
       createdBy,
+      projectId,
     } = req.body;
+
+    // Check if the token's userId matches the createdBy
+    if (req.user.id !== createdBy) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    // Check if project and creator exist
+    const project = await Project.findById(projectId);
+    const creator = await User.findById(createdBy);
+
+    if (!project || !creator) {
+      return res
+        .status(400)
+        .json({ error: "Invalid project ID or creator ID" });
+    }
+
+    // Check if user is a member or project manager of the project
+    const isTeamMember = project.teamMembers.includes(creator._id);
+    const isProjectManager =
+      String(project.projectManager) === String(creator._id);
+
+    if (!(isTeamMember || isProjectManager)) {
+      return res.status(403).json({
+        error:
+          "User is neither a team member nor a project manager of the project",
+      });
+    }
 
     // create new bug report
     const newBugReport = new BugReport({
@@ -59,7 +128,8 @@ exports.createBugReport = async (req, res) => {
       expectedResult,
       actualResult,
       priority,
-      createdBy,
+      createdBy: creator._id,
+      project: projectId, // Assign the project ID
       status: "Open", // default status
       assignedTo: null, // not assigned yet
     });
@@ -76,8 +146,6 @@ exports.createBugReport = async (req, res) => {
 };
 
 // Updated function to get all bug reports with pagination
-// Updated function to get all bug reports with pagination and search functionality
-// Updated function to get all bug reports with pagination and search functionality
 exports.getAllBugReports = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
@@ -237,14 +305,7 @@ exports.getBugReportById = async (req, res) => {
   try {
     const bugReport = await BugReport.findById(req.params.id)
       .populate("assignedTo", "-password -__v") // Exclude password and __v fields
-      .populate("createdBy", "-password -__v") // Exclude password and __v fields
-      .populate({
-        path: "comments",
-        populate: {
-          path: "postedBy",
-          select: "username _id", // include the username and _id of the commenter
-        },
-      });
+      .populate("createdBy", "-password -__v"); // Exclude password and __v fields
 
     // If the bug report was not found or isActive is false, send an appropriate error message
     if (!bugReport || !bugReport.isActive) {
@@ -255,102 +316,6 @@ exports.getBugReportById = async (req, res) => {
     res.status(200).json(bugReport);
   } catch (error) {
     // send error response
-    res.status(500).json({ error: error.message });
-  }
-};
-
-exports.addCommentToBugReport = async (req, res) => {
-  try {
-    console.log("Request received");
-    console.log("Request body: ", req.body);
-    console.log("Request params: ", req.params);
-    console.log("User ID from JWT: ", req._id);
-
-    // extract data from request
-    const { commentText } = req.body;
-    const { id } = req.params;
-    const userId = req.user._id;
-
-    console.log("Fetching bug report with id: ", id);
-    // get bug report
-    const bugReport = await BugReport.findById(id);
-
-    if (!bugReport) {
-      console.log("Bug report not found");
-      return res.status(404).json({ message: "Bug report not found" });
-    }
-
-    try {
-      const user = await User.findById(userId);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      console.log("User found in database: ", user);
-    } catch (error) {
-      console.log("Error: ", error);
-      res.status(500).json({ error: error.message });
-    }
-    console.log("Adding comment to bug report");
-    // add comment to bug report
-    bugReport.comments.push({
-      content: commentText,
-      postedBy: userId,
-    });
-
-    console.log("Saving updated bug report");
-    // save bug report
-    const updatedBugReport = await bugReport.save();
-
-    console.log("Returning updated bug report");
-    res.status(200).json(updatedBugReport);
-  } catch (error) {
-    console.log("Error: ", error);
-    res.status(500).json({ error: error.message });
-  }
-};
-
-exports.deleteCommentFromBugReport = async (req, res) => {
-  console.log("Deleting comment from bug report...");
-
-  try {
-    const bugReportId = req.params.bugReportId;
-    const commentId = req.params.commentId;
-
-    console.log(`Bug report ID: ${bugReportId}, Comment ID: ${commentId}`);
-
-    const bugReport = await BugReport.findById(bugReportId);
-    if (!bugReport) {
-      console.log("Bug report not found.");
-      return res.status(404).json({ error: "Bug report not found" });
-    }
-
-    const comment = bugReport.comments.id(commentId);
-    if (!comment) {
-      console.log("Comment not found.");
-      return res.status(404).json({ error: "Comment not found" });
-    }
-
-    console.log(`Comment posted by: ${comment.postedBy.toString()}`);
-
-    console.log(req.user._id.toString());
-    // Only the comment author or a user with a certain role can delete the comment
-    if (req.user._id.toString() !== comment.postedBy.toString()) {
-      console.log("User doesn't have permission to delete this comment.");
-      return res
-        .status(403)
-        .json({ error: "You don't have permission to delete this comment" });
-    }
-
-    // Pull the comment from the comments array
-    bugReport.comments.pull(commentId);
-    console.log("Comment pulled from bug report.");
-
-    const updatedBugReport = await bugReport.save();
-    console.log("Updated bug report: ", updatedBugReport);
-
-    res.status(200).json(updatedBugReport);
-  } catch (error) {
-    console.error("Error occurred while deleting comment: ", error.message);
     res.status(500).json({ error: error.message });
   }
 };

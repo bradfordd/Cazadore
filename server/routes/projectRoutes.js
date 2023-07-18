@@ -2,13 +2,19 @@ const express = require("express");
 const projectController = require("../controllers/projectController");
 const router = express.Router();
 const authenticateJWT = require("../middleware/authenticateJWT");
-const authorizeProjectUpdate = require("../middleware/authorizeProjectUpdate"); // assume this middleware authorizes update/delete actions
+const projectManagerAuthorization = require("../middleware/verifyProjectManager");
+const projectManagerRoleCheck = require("../middleware/checkProjectManagerRole");
 
 // Ensure that user is authenticated for all routes
 router.use(authenticateJWT);
 
 // Create a new project
-router.post("/create", projectController.createProject);
+// Ensure that user is a project manager
+router.post(
+  "/create",
+  projectManagerRoleCheck,
+  projectController.createProject
+);
 
 // Get all projects
 router.get("/all", projectController.getAllProjects);
@@ -17,15 +23,26 @@ router.get("/all", projectController.getAllProjects);
 router.get("/:id", projectController.getProject);
 
 // Update a specific project
-router.put("/:id", authorizeProjectUpdate, projectController.updateProject);
+// Ensure that user is the project manager for this project
+router.put(
+  "/:id",
+  projectManagerAuthorization,
+  projectController.updateProject
+);
 
 // Delete a specific project
-router.delete("/:id", authorizeProjectUpdate, projectController.deleteProject);
+// Ensure that user is the project manager for this project
+router.delete(
+  "/:id",
+  projectManagerAuthorization,
+  projectController.deleteProject
+);
 
 // Add a member to a specific project
+// Ensure that user is the project manager for this project
 router.put(
   "/:id/addMember",
-  authorizeProjectUpdate,
+  projectManagerAuthorization,
   projectController.addMemberToProject
 );
 

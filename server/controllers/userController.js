@@ -22,6 +22,12 @@ exports.registerNewUser = async (req, res) => {
     return res.status(400).json({ message: passwordValidationResult });
   }
 
+  // Check if the role is valid
+  const acceptedRoles = ["admin", "project manager", "developer"];
+  if (!acceptedRoles.includes(req.body.role)) {
+    return res.status(400).json({ message: "Invalid role" });
+  }
+
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
   const match = await bcrypt.compare(req.body.password, hashedPassword);
@@ -30,6 +36,7 @@ exports.registerNewUser = async (req, res) => {
   const user = new User({
     username: req.body.username,
     password: hashedPassword,
+    role: req.body.role, // Added role here
   });
 
   try {
@@ -93,7 +100,7 @@ exports.loginUser = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}, "username _id");
+    const users = await User.find({}, "username _id role");
     return res.status(200).json(users);
   } catch (err) {
     return res.status(500).json({ message: err.message });
@@ -104,7 +111,7 @@ exports.getCurrentUser = async (req, res) => {
   console.log("Getting current user...");
   try {
     console.log("Looking up user with ID: ", req._id);
-    const user = await User.findById(req.user._id, "username _id");
+    const user = await User.findById(req.user._id, "username _id role");
     if (user) {
       console.log("Found user: ", user);
       res.status(200).json(user);
