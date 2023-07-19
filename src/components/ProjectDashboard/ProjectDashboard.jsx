@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./Login.css";
 
 const ManagedProjects = () => {
   const [projects, setProjects] = useState([]);
@@ -8,7 +7,10 @@ const ManagedProjects = () => {
   useEffect(() => {
     const fetchManagedProjects = async () => {
       try {
-        const response = await axios.get("/api/projects/managed");
+        const response = await axios.get(
+          "http://localhost:5000/api/projects/managed",
+          { withCredentials: true } // Include this option
+        );
 
         if (response.status === 200) {
           setProjects(response.data);
