@@ -179,6 +179,25 @@ const projectController = {
     }
   },
 
+  getManagedProjects: async (req, res) => {
+    try {
+      // Get the ID of the logged-in user from the authentication middleware (assuming it's stored in req.user.id)
+      const userId = req.user.id;
+
+      console.log("Fetching managed projects for user ID:", userId);
+
+      // Find projects where the projectManager field matches the user ID
+      const projects = await Project.find({ projectManager: userId });
+
+      console.log("Managed projects:", projects);
+
+      res.json(projects);
+    } catch (err) {
+      console.error("Error fetching managed projects:", err);
+      res.status(500).json({ message: err.message });
+    }
+  },
+
   // Add a member to a project
   addMemberToProject: async (req, res) => {
     try {

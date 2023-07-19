@@ -8,6 +8,9 @@ const projectManagerRoleCheck = require("../middleware/checkProjectManagerRole")
 // Ensure that user is authenticated for all routes
 router.use(authenticateJWT);
 
+// Get managed projects by the logged-in user
+router.get("/managed", projectController.getManagedProjects);
+
 // Create a new project
 // Ensure that user is a project manager
 router.post(
