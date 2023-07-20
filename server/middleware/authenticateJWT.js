@@ -14,34 +14,41 @@ function verifyToken(token, secretKey) {
 }
 
 async function authenticateJWT(req, res, next) {
-  console.log("Authenticating JWT");
-  console.log("Cookies: ", req.cookies);
+  console.log("[authenticateJWT] START");
+
+  console.log("[authenticateJWT] Authenticating JWT");
+  console.log("[authenticateJWT] Cookies: ", req.cookies);
   const token = req.cookies.token;
 
-  console.log("Token from cookies: ", token);
+  console.log("[authenticateJWT] Token from cookies: ", token);
 
   if (token) {
     try {
       const user = await verifyToken(token, process.env.JWT_SECRET_KEY);
-      console.log("Verified user from token: ", user);
+      console.log("[authenticateJWT] Verified user from token: ", user);
 
       req.user = user;
       const userFromDb = await User.findById(req.user.id, "username _id role");
 
       if (userFromDb) {
+        console.log("[authenticateJWT] Found user in DB: ", userFromDb);
         req.user = userFromDb;
+        console.log("[authenticateJWT] Calling next()...");
+        next();
       } else {
+        console.log("[authenticateJWT] User not found in DB");
         return res.status(404).json({ message: "User not found" });
       }
-
-      next();
     } catch (err) {
-      console.log("Error verifying token: ", err);
+      console.log("[authenticateJWT] Error verifying token: ", err);
       return res.sendStatus(403);
     }
   } else {
-    console.log("No token provided");
+    console.log("[authenticateJWT] No token provided");
     res.sendStatus(401);
   }
+
+  console.log("[authenticateJWT] END");
 }
+
 module.exports = authenticateJWT;

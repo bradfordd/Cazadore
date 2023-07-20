@@ -8,6 +8,15 @@ const projectManagerRoleCheck = require("../middleware/checkProjectManagerRole")
 // Ensure that user is authenticated for all routes
 router.use(authenticateJWT);
 
+router.get(
+  "/developer",
+  (req, res) => {
+    console.log("[Route Check] /developer route accessed!");
+    next();
+  },
+  projectController.getProjectsOfDeveloper
+);
+
 // Get managed projects by the logged-in user
 router.get("/managed", authenticateJWT, projectController.getManagedProjects);
 

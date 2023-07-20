@@ -12,7 +12,7 @@ const projectController = {
     }
   },
 
-  // Create a new project
+  // Create a  w project
   createProject: async (req, res) => {
     // Validate the users
     const userIds = [req.user.id, req.body.projectManager].concat(
@@ -243,6 +243,37 @@ const projectController = {
         "An error occurred during the member addition process: ",
         err.message
       );
+      res.status(500).json({ message: err.message });
+    }
+  },
+  getProjectsOfDeveloper: async (req, res, next) => {
+    console.log("Entering getProjectsOfDeveloper function..."); // Log when we enter the function
+
+    try {
+      // Get the ID of the logged-in developer from the authentication middleware
+      // (assuming it's stored in req.user.id)
+      const developerId = req.user.id;
+
+      console.log("Developer ID from req.user.id:", developerId); // Log the extracted developerId
+
+      console.log("Fetching projects for developer ID:", developerId);
+
+      // Find projects where the teamMembers field contains the developer's ID
+      const projects = await Project.find({ teamMembers: developerId });
+
+      console.log("Number of projects fetched:", projects.length); // Log the number of projects returned
+      console.log("Projects of developer:", projects);
+
+      res.json(projects);
+    } catch (err) {
+      console.error("Caught an error in getProjectsOfDeveloper:", err); // Log the error
+      console.error("Error message:", err.message); // Specifically log the error message
+
+      // If there are any additional properties on the error object that could be useful,
+      // you can log them as well. For example:
+      // console.error("Error name:", err.name);
+      // console.error("Error stack:", err.stack);
+
       res.status(500).json({ message: err.message });
     }
   },
