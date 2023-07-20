@@ -4,16 +4,14 @@ const router = express.Router();
 const authenticateJWT = require("../middleware/authenticateJWT");
 const projectManagerAuthorization = require("../middleware/verifyProjectManager");
 const projectManagerRoleCheck = require("../middleware/checkProjectManagerRole");
+const verifyDeveloperRole = require("../middleware/checkDeveloperRole");
 
 // Ensure that user is authenticated for all routes
 router.use(authenticateJWT);
 
 router.get(
   "/developer",
-  (req, res) => {
-    console.log("[Route Check] /developer route accessed!");
-    next();
-  },
+  verifyDeveloperRole,
   projectController.getProjectsOfDeveloper
 );
 
