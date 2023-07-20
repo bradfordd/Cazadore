@@ -8,6 +8,7 @@ import {
 import Login from "../Login/Login";
 import Register from "../Register/Register";
 import Homepage from "../Homepage/Homepage";
+import ProjectDetail from "../ProjectDetail/ProjectDetail";
 import "./App.css";
 import axios from "axios";
 
@@ -29,6 +30,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/homepage" element={<Homepage />} />
+        <Route path="/project/:projectId" element={<ProjectDetail />} />
       </Routes>
     </Router>
   );
