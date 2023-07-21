@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import ProjectDashboard from "../ProjectDashboard/ProjectDashboard"; // adjust the path as necessary
+import ProjectDashboardManager from "../ProjectDashboardManager/ProjectDashboardManager";
+import ProjectDashboardDeveloper from "../ProjectDashboardDeveloper/ProjectDashboardDeveloper";
 
 const Homepage = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [userRole, setUserRole] = useState(null); // initialized as null
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,6 +21,10 @@ const Homepage = () => {
 
         if (response.status === 200) {
           setIsLoading(false);
+
+          // Retrieve the user's role from session storage and set it in state
+          const role = sessionStorage.getItem("userRole");
+          setUserRole(role);
         }
       } catch (error) {
         if (error.response && error.response.status === 401) {
@@ -36,7 +42,8 @@ const Homepage = () => {
 
   return (
     <div>
-      <ProjectDashboard />
+      {userRole === "projectManager" && <ProjectDashboardManager />}
+      {userRole === "developer" && <ProjectDashboardDeveloper />}
     </div>
   );
 };

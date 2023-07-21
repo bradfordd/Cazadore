@@ -29,11 +29,14 @@ const Login = () => {
           username,
           password,
         },
-        { withCredentials: true } // Add this line
+        { withCredentials: true }
       );
 
       if (response.status === 200) {
-        // If login was successful, navigate to the homepage
+        // If login was successful, store the user's role in session storage
+        sessionStorage.setItem("userRole", response.data.role);
+
+        // Then navigate to the homepage
         navigate("/homepage");
       } else {
         setError("Invalid username or password");

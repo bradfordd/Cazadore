@@ -74,7 +74,11 @@ exports.loginUser = async (req, res) => {
       console.log("Password match for user: ", user.username);
 
       console.log("Passwords match, generating token...");
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
+      const tokenPayload = {
+        id: user._id,
+        role: user.role, // Assuming 'role' is the name of the field in your User model
+      };
+      const token = jwt.sign(tokenPayload, process.env.JWT_SECRET_KEY, {
         expiresIn: "24h",
       });
 
@@ -87,7 +91,8 @@ exports.loginUser = async (req, res) => {
         secure: false,
       });
 
-      res.status(200).json({ message: "Login successful" });
+      // Send the role back to the client along with the success message
+      res.status(200).json({ message: "Login successful", role: user.role });
     } else {
       console.log("Password mismatch for user: ", user.username);
       res.status(403).json({ message: "Not Allowed" }); // Unauthorized access
