@@ -5,7 +5,10 @@ const projectController = {
   // Get all projects
   getAllProjects: async (req, res) => {
     try {
-      const projects = await Project.find();
+      const projects = await Project.find()
+        .populate("projectManager", "username") // populating projectManager with just the username
+        .populate("teamMembers", "username"); // populating teamMembers with just the username
+
       res.json(projects);
     } catch (err) {
       res.status(500).json({ message: err.message });
@@ -63,13 +66,14 @@ const projectController = {
   // Get a specific project
   getProject: async (req, res) => {
     try {
-      const project = await Project.findById(req.params.id).populate(
-        "teamMembers",
-        "username"
-      );
+      const project = await Project.findById(req.params.id)
+        .populate("projectManager", "username") // populating projectManager with just the username
+        .populate("teamMembers", "username"); // populating teamMembers with just the username
+
       if (project == null) {
         return res.status(404).json({ message: "Cannot find project" });
       }
+
       res.json(project);
     } catch (err) {
       res.status(500).json({ message: err.message });
@@ -186,8 +190,10 @@ const projectController = {
 
       console.log("Fetching managed projects for user ID:", userId);
 
-      // Find projects where the projectManager field matches the user ID
-      const projects = await Project.find({ projectManager: userId });
+      // Find projects where the projectManager field matches the user ID and populate the teamMembers field
+      const projects = await Project.find({ projectManager: userId })
+        .populate("projectManager", "username") // Optional: populate the projectManager with just the username
+        .populate("teamMembers", "username"); // populating teamMembers with just the username
 
       console.log("Managed projects:", projects);
 
@@ -258,8 +264,10 @@ const projectController = {
 
       console.log("Fetching projects for developer ID:", developerId);
 
-      // Find projects where the teamMembers field contains the developer's ID
-      const projects = await Project.find({ teamMembers: developerId });
+      // Find projects where the teamMembers field contains the developer's ID and populate them
+      const projects = await Project.find({ teamMembers: developerId })
+        .populate("projectManager", "username") // Optional: populate the projectManager with just the username
+        .populate("teamMembers", "username"); // populating teamMembers with just the username
 
       console.log("Number of projects fetched:", projects.length); // Log the number of projects returned
       console.log("Projects of developer:", projects);

@@ -16,6 +16,7 @@ const ProjectDashboardDeveloper = () => {
           }
         );
         setProjects(response.data);
+        console.log("Response Data: ", response.data);
         setLoading(false);
       } catch (err) {
         setError("Error fetching projects. Please try again.");
@@ -43,16 +44,11 @@ const ProjectDashboardDeveloper = () => {
             <div key={project._id} className="project-card">
               <h3>{project.name}</h3>
               <p>{project.description}</p>
-              <p>
-                Managed by: {project.projectManager.name} (
-                {project.projectManager.email})
-              </p>
+              <p>Managed by: {project.projectManager.username}</p>
               <h4>Team Members:</h4>
               <ul>
                 {project.teamMembers.map((member) => (
-                  <li key={member._id}>
-                    {member.name} ({member.email})
-                  </li>
+                  <li key={member._id}>{member.username}</li>
                 ))}
               </ul>
               <p>
