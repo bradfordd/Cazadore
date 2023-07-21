@@ -29,6 +29,14 @@ router.post(
 // Get all projects
 router.get("/all", projectController.getAllProjects);
 
+// Add a member to a specific project
+// Ensure that user is the project manager for this project
+router.put(
+  "/:id/addMember",
+  projectManagerAuthorization,
+  projectController.addMemberToProject
+);
+
 // Get a specific project
 router.get("/:id", projectController.getProject);
 
@@ -46,14 +54,6 @@ router.delete(
   "/:id",
   projectManagerAuthorization,
   projectController.deleteProject
-);
-
-// Add a member to a specific project
-// Ensure that user is the project manager for this project
-router.put(
-  "/:id/addMember",
-  projectManagerAuthorization,
-  projectController.addMemberToProject
 );
 
 module.exports = router;
