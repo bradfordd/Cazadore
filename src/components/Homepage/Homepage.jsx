@@ -42,7 +42,7 @@ const Homepage = () => {
 
   return (
     <div>
-      {userRole === "projectManager" && <ProjectDashboardManager />}
+      {userRole === "project manager" && <ProjectDashboardManager />}
       {userRole === "developer" && <ProjectDashboardDeveloper />}
     </div>
   );

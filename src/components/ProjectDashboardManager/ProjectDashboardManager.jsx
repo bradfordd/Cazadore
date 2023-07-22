@@ -32,7 +32,9 @@ const ManagedProjects = () => {
           {projects.map((project) => (
             <li key={project._id}>
               <h3>
-                <Link to={`/project/${project._id}`}>{project.name}</Link>
+                <Link to={`/project/manager/${project._id}`}>
+                  {project.name}
+                </Link>
               </h3>
               <p>{project.description}</p>
             </li>

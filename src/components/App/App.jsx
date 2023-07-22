@@ -8,7 +8,8 @@ import {
 import Login from "../Login/Login";
 import Register from "../Register/Register";
 import Homepage from "../Homepage/Homepage";
-import ProjectDetail from "../ProjectDetail/ProjectDetail";
+import ProjectDetailDeveloper from "../ProjectDetailDeveloper/ProjectDetailDeveloper";
+import ProjectDetailManager from "../ProjectDetailManager/ProjectDetailManager";
 import "./App.css";
 import axios from "axios";
 
@@ -30,7 +31,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/homepage" element={<Homepage />} />
-        <Route path="/project/:projectId" element={<ProjectDetail />} />
+        <Route
+          path="/project/developer/:projectId"
+          element={<ProjectDetailDeveloper />}
+        />
+        <Route
+          path="/project/manager/:projectId"
+          element={<ProjectDetailManager />}
+        />
       </Routes>
     </Router>
   );

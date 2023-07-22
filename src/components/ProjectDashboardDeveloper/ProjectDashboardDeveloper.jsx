@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const ProjectDashboardDeveloper = () => {
   const [projects, setProjects] = useState([]);
@@ -42,6 +43,11 @@ const ProjectDashboardDeveloper = () => {
         <div className="projects-list">
           {projects.map((project) => (
             <div key={project._id} className="project-card">
+              <h3>
+                <Link to={`/project/developer/${project._id}`}>
+                  {project.name}
+                </Link>
+              </h3>
               <h3>{project.name}</h3>
               <p>{project.description}</p>
               <p>Managed by: {project.projectManager.username}</p>
