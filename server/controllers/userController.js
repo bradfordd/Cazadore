@@ -129,3 +129,37 @@ exports.getCurrentUser = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.isUserDeveloper = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id, "role");
+    if (user && user.role === "developer") {
+      return res.status(200).json({ isDeveloper: true });
+    } else {
+      return res.status(200).json({ isDeveloper: false });
+    }
+  } catch (err) {
+    console.error(
+      "Error occurred while checking if user is a developer: ",
+      err.message
+    );
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.isUserProjectManager = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id, "role");
+    if (user && user.role === "project manager") {
+      return res.status(200).json({ isProjectManager: true });
+    } else {
+      return res.status(200).json({ isProjectManager: false });
+    }
+  } catch (err) {
+    console.error(
+      "Error occurred while checking if user is a project manager: ",
+      err.message
+    );
+    res.status(500).json({ message: err.message });
+  }
+};
