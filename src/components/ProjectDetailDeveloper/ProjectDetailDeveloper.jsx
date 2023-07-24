@@ -9,25 +9,42 @@ const ProjectDetailDeveloper = () => {
   const navigate = useNavigate(); // useNavigate hook for redirection
 
   useEffect(() => {
-    const checkUserRole = async () => {
+    const fetchProjectDetails = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/Users/isUserDeveloper",
+        const checkUserRoleResponse = await axios.get(
+          `http://localhost:5000/api/projects/isDeveloperTeamMember/${projectId}`,
           { withCredentials: true }
         );
 
-        if (response.status !== 200 || !response.data.isDeveloper) {
-          // Redirect if not a developer or if any unexpected response is received
+        // Check if the user is part of the project team
+        if (checkUserRoleResponse.status !== 200) {
+          navigate("/homepage");
+          return; // Early exit from the function if the user isn't a developer team member
+        }
+
+        // If user is a developer team member, fetch the project details
+        const projectResponse = await axios.get(
+          `http://localhost:5000/api/projects/${projectId}`,
+          { withCredentials: true }
+        );
+
+        if (projectResponse.status === 200) {
+          setProject(projectResponse.data);
+        } else {
+          console.error("Unexpected response when fetching project details");
           navigate("/homepage");
         }
       } catch (error) {
-        console.error("Error checking user role:", error);
-        navigate("/login"); // Redirect to login in case of an error (optional, based on your use case)
+        console.error(
+          "Error fetching project details or checking user role:",
+          error
+        );
+        navigate("/login");
       }
     };
 
-    checkUserRole(); // Invoke the checkUserRole function inside useEffect
-  }, [navigate]);
+    fetchProjectDetails();
+  }, [projectId, navigate]);
 
   if (!project) return <div>Loading...</div>;
 

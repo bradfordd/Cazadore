@@ -1,40 +1,66 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const ProjectDetailManager = () => {
   const [project, setProject] = useState(null);
-  const params = useParams();
-  const { projectId: projectId } = useParams();
+  const { projectId } = useParams();
+  const navigate = useNavigate();
 
-  // Log the entire params object
-  console.log("Params:", params);
+  console.log("Params:", projectId); // Log the projectId
 
   useEffect(() => {
     const fetchProjectDetail = async () => {
       try {
-        // Use template literals to embed the projectId in the URL
-        const response = await axios.get(
+        // First, check if the user is the assigned manager for the project
+        const managerCheckResponse = await axios.get(
+          `http://localhost:5000/api/projects/isAssignedManager/${projectId}`,
+          { withCredentials: true }
+        );
+
+        if (
+          managerCheckResponse.status !== 200 ||
+          !(
+            managerCheckResponse.data.message === "User is the project manager."
+          )
+        ) {
+          console.log(
+            "User is not the assigned project manager:",
+            managerCheckResponse.data.message
+          );
+          navigate("/homepage"); // Redirect to homepage if the user isn't the assigned manager
+          return; // Exit the function early
+        }
+
+        // If user is the assigned manager, then fetch the project details
+        const projectDetailResponse = await axios.get(
           `http://localhost:5000/api/projects/${projectId}`,
           { withCredentials: true }
         );
 
-        console.log("Response received:", response); // Log the full response
+        console.log("Response received:", projectDetailResponse); // Log the full response
 
-        if (response.status === 200) {
-          console.log("Setting project data:", response.data); // Log the project data we're about to set
-          setProject(response.data);
+        if (projectDetailResponse.status === 200) {
+          console.log("Setting project data:", projectDetailResponse.data); // Log the project data
+          setProject(projectDetailResponse.data);
         } else {
-          console.log("Unexpected response status:", response.status); // Log if status is other than 200
+          console.log(
+            "Unexpected response status:",
+            projectDetailResponse.status
+          );
         }
       } catch (error) {
-        console.error("Error fetching project details:", error);
+        console.error(
+          "Error fetching project details or checking user role:",
+          error
+        );
         console.error("Error details:", error.response?.data || error.message); // Log detailed error message if available
+        navigate("/login"); // Redirect to login (or any other appropriate page) in case of an error
       }
     };
 
     fetchProjectDetail();
-  }, [projectId]); // Add projectId to the dependency array to make sure useEffect only runs when projectId changes
+  }, [projectId, navigate]); // Add projectId and navigate to the dependency array
 
   if (!project) return <div>Loading...</div>;
 
