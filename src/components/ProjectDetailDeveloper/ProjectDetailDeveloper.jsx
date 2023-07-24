@@ -6,35 +6,28 @@ const ProjectDetailDeveloper = () => {
   const [project, setProject] = useState(null);
   const params = useParams();
   const { projectId: projectId } = useParams();
-
-  // Log the entire params object
-  console.log("Params:", params);
+  const navigate = useNavigate(); // useNavigate hook for redirection
 
   useEffect(() => {
-    const fetchProjectDetail = async () => {
+    const checkUserRole = async () => {
       try {
-        // Use template literals to embed the projectId in the URL
         const response = await axios.get(
-          `http://localhost:5000/api/projects/${projectId}`,
+          "http://localhost:5000/api/Users/isUserDeveloper",
           { withCredentials: true }
         );
 
-        console.log("Response received:", response); // Log the full response
-
-        if (response.status === 200) {
-          console.log("Setting project data:", response.data); // Log the project data we're about to set
-          setProject(response.data);
-        } else {
-          console.log("Unexpected response status:", response.status); // Log if status is other than 200
+        if (response.status !== 200 || !response.data.isDeveloper) {
+          // Redirect if not a developer or if any unexpected response is received
+          navigate("/homepage");
         }
       } catch (error) {
-        console.error("Error fetching project details:", error);
-        console.error("Error details:", error.response?.data || error.message); // Log detailed error message if available
+        console.error("Error checking user role:", error);
+        navigate("/login"); // Redirect to login in case of an error (optional, based on your use case)
       }
     };
 
-    fetchProjectDetail();
-  }, [projectId]); // Add projectId to the dependency array to make sure useEffect only runs when projectId changes
+    checkUserRole(); // Invoke the checkUserRole function inside useEffect
+  }, [navigate]);
 
   if (!project) return <div>Loading...</div>;
 

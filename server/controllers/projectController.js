@@ -285,6 +285,93 @@ const projectController = {
       res.status(500).json({ message: err.message });
     }
   },
+  isDeveloperTeamMember: async (req, res) => {
+    try {
+      console.log("Inside isDeveloperTeamMember function");
+
+      const projectId = req.params.id;
+      const userId = req.user.id;
+
+      console.log(`Project ID: ${projectId}, User ID: ${userId}`);
+
+      // Check if the user is a developer
+      const user = await User.findById(userId);
+
+      if (!user || user.role !== "developer") {
+        console.log("User is not a developer or doesn't exist");
+        return res.status(403).json({ message: "User is not a developer." });
+      }
+
+      console.log(`User role: ${user.role}`);
+
+      const project = await Project.findById(projectId);
+
+      if (!project) {
+        console.log("Project not found with the provided ID");
+        return res.status(404).json({ message: "Project not found." });
+      }
+
+      console.log(`Project team members: ${project.teamMembers}`);
+
+      if (project.teamMembers.includes(userId)) {
+        console.log("User is a member of the project");
+        return res.status(200).json({ message: "User is a team member." });
+      } else {
+        console.log("User is not a member of the project");
+        return res.status(403).json({ message: "User is not a team member." });
+      }
+    } catch (err) {
+      console.error("Error occurred in isDeveloperTeamMember:", err);
+      return res.status(500).json({ message: err.message });
+    }
+  },
+
+  isAssignedManager: async (req, res) => {
+    try {
+      console.log("Inside isAssignedManager function");
+
+      const projectId = req.params.id;
+      const userId = req.user.id;
+
+      console.log(`Project ID: ${projectId}, User ID: ${userId}`);
+
+      // Check if the user is a project manager
+      const user = await User.findById(userId);
+
+      if (!user || user.role !== "project manager") {
+        console.log("User is not a project manager or doesn't exist");
+        return res
+          .status(403)
+          .json({ message: "User is not a project manager." });
+      }
+
+      console.log(`User role: ${user.role}`);
+
+      const project = await Project.findById(projectId);
+
+      if (!project) {
+        console.log("Project not found with the provided ID");
+        return res.status(404).json({ message: "Project not found." });
+      }
+
+      console.log(`Project manager ID: ${project.projectManager}`);
+
+      if (project.projectManager.toString() === userId) {
+        console.log("User is the project manager");
+        return res
+          .status(200)
+          .json({ message: "User is the project manager." });
+      } else {
+        console.log("User is not the project manager");
+        return res
+          .status(403)
+          .json({ message: "User is not the project manager." });
+      }
+    } catch (err) {
+      console.error("Error occurred in isAssignedManager:", err);
+      return res.status(500).json({ message: err.message });
+    }
+  },
 };
 
 module.exports = projectController;

@@ -15,6 +15,13 @@ router.get(
   projectController.getProjectsOfDeveloper
 );
 
+router.get("/isAssignedManager/:id", projectController.isAssignedManager);
+
+router.get(
+  "/isDeveloperTeamMember/:id",
+  projectController.isDeveloperTeamMember
+);
+
 // Get managed projects by the logged-in user
 router.get("/managed", authenticateJWT, projectController.getManagedProjects);
 
