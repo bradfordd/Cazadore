@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const ProjectDetailDeveloper = () => {
   const [project, setProject] = useState(null);
@@ -15,9 +15,12 @@ const ProjectDetailDeveloper = () => {
           `http://localhost:5000/api/projects/isDeveloperTeamMember/${projectId}`,
           { withCredentials: true }
         );
-
+        console.log("CheckUserRoleResponse: ", checkUserRoleResponse.data);
         // Check if the user is part of the project team
-        if (checkUserRoleResponse.status !== 200) {
+        if (
+          checkUserRoleResponse.status !== 200 ||
+          !(checkUserRoleResponse.data.message === "User is a team member.")
+        ) {
           navigate("/homepage");
           return; // Early exit from the function if the user isn't a developer team member
         }
