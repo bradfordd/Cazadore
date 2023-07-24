@@ -4,6 +4,8 @@ import { useParams, useNavigate } from "react-router-dom";
 
 const ProjectDetailManager = () => {
   const [project, setProject] = useState(null);
+  const [unassignedDevelopers, setUnassignedDevelopers] = useState([]);
+  const [selectedDeveloper, setSelectedDeveloper] = useState("");
   const { projectId } = useParams();
   const navigate = useNavigate();
 
@@ -60,6 +62,25 @@ const ProjectDetailManager = () => {
     };
 
     fetchProjectDetail();
+
+    // Fetch the unassigned developers for the dropdown
+    const fetchUnassignedDevelopers = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/projects/${projectId}/unassigned-developers`,
+          { withCredentials: true }
+        );
+        if (response.status === 200) {
+          setUnassignedDevelopers(response.data);
+        } else {
+          console.log("Unexpected response status:", response.status);
+        }
+      } catch (error) {
+        console.error("Error fetching unassigned developers:", error);
+      }
+    };
+
+    fetchUnassignedDevelopers();
   }, [projectId, navigate]); // Add projectId and navigate to the dependency array
 
   if (!project) return <div>Loading...</div>;
@@ -69,8 +90,26 @@ const ProjectDetailManager = () => {
       <h2>Project Details</h2>
       <h3>{project.name}</h3>
       <p>{project.description}</p>
-      {/* You can add more details here as needed */}
-      {/* e.g., project manager, team members, created date, etc. */}
+      <div>
+        <select
+          value={selectedDeveloper}
+          onChange={(e) => setSelectedDeveloper(e.target.value)}
+        >
+          <option value="">Select a developer...</option>
+          {unassignedDevelopers.map((developer) => (
+            <option key={developer._id} value={developer._id}>
+              {developer.username}
+            </option>
+          ))}
+        </select>
+        <button
+          onClick={() => {
+            // You can add the functionality to assign the selected developer to the project here
+          }}
+        >
+          Add
+        </button>
+      </div>
     </div>
   );
 };
