@@ -372,6 +372,39 @@ const projectController = {
       return res.status(500).json({ message: err.message });
     }
   },
+
+  getUnassignedDevelopers: async (req, res) => {
+    try {
+      console.log("Inside getUnassignedDevelopers function");
+
+      const projectId = req.params.id;
+
+      // Retrieve the project by its ID
+      const project = await Project.findById(projectId);
+
+      if (!project) {
+        console.log("Project not found with the provided ID");
+        return res.status(404).json({ message: "Project not found." });
+      }
+
+      // Retrieve all developers from the database
+      const allDevelopers = await User.find({
+        role: "developer",
+        _id: { $nin: project.teamMembers },
+      }).select("-password");
+
+      // Filter out developers already assigned to the project
+      const unassignedDevelopers = allDevelopers.filter(
+        (developer) => !project.teamMembers.includes(developer._id.toString())
+      );
+
+      // Return the list of unassigned developers
+      res.json(unassignedDevelopers);
+    } catch (err) {
+      console.error("Error occurred in getUnassignedDevelopers:", err);
+      return res.status(500).json({ message: err.message });
+    }
+  },
 };
 
 module.exports = projectController;

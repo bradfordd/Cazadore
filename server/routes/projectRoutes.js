@@ -63,4 +63,10 @@ router.delete(
   projectController.deleteProject
 );
 
+router.get(
+  "/:id/unassigned-developers",
+  projectManagerAuthorization,
+  projectController.getUnassignedDevelopers
+);
+
 module.exports = router;
