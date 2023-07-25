@@ -126,6 +126,9 @@ const ProjectDetailManager = () => {
         <button onClick={handleAddDeveloperToProject}>Add</button>
       </div>
       <h2>Submit a Bug Report</h2>
+      <button onClick={() => navigate(`/projects/${projectId}/bug-reports`)}>
+        See all bug reports for this project
+      </button>
       <BugReportForm />
     </div>
   );

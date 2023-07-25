@@ -10,6 +10,7 @@ import Register from "../Register/Register";
 import Homepage from "../Homepage/Homepage";
 import ProjectDetailDeveloper from "../ProjectDetailDeveloper/ProjectDetailDeveloper";
 import ProjectDetailManager from "../ProjectDetailManager/ProjectDetailManager";
+import BugReportsList from "../ProjectBugReportList/ProjectBugReportList";
 import "./App.css";
 import axios from "axios";
 
@@ -38,6 +39,10 @@ function App() {
         <Route
           path="/project/manager/:projectId"
           element={<ProjectDetailManager />}
+        />
+        <Route
+          path="/projects/:projectId/bug-reports"
+          element={<BugReportsList />}
         />
       </Routes>
     </Router>
