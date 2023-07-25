@@ -82,6 +82,7 @@ exports.updateBugReport = async (req, res) => {
 
 exports.createBugReport = async (req, res) => {
   try {
+    // Extract most fields from req.body as before
     const {
       title,
       description,
@@ -89,9 +90,11 @@ exports.createBugReport = async (req, res) => {
       expectedResult,
       actualResult,
       priority,
-      createdBy,
       projectId,
     } = req.body;
+
+    // Use req.user.id directly as createdBy
+    const createdBy = req.user.id;
 
     // Check if the token's userId matches the createdBy
     if (req.user.id !== createdBy) {

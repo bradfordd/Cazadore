@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import BugReportForm from "../BugReportForm/BugReportForm";
 
 const ProjectDetailManager = () => {
+  const navigate = useNavigate();
   const [project, setProject] = useState(null);
   const [unassignedDevelopers, setUnassignedDevelopers] = useState([]);
   const [selectedDeveloper, setSelectedDeveloper] = useState("");
   const { projectId } = useParams();
-  const navigate = useNavigate();
 
   console.log("Params:", projectId); // Log the projectId
 
