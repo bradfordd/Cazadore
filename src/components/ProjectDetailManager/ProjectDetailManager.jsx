@@ -83,6 +83,26 @@ const ProjectDetailManager = () => {
     fetchUnassignedDevelopers();
   }, [projectId, navigate]); // Add projectId and navigate to the dependency array
 
+  const handleAddDeveloperToProject = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/api/projects/${projectId}/addMember`,
+        { newMember: selectedDeveloper },
+        { withCredentials: true }
+      );
+      if (response.status === 200) {
+        console.log("Developer added successfully:", response.data);
+        // After adding, fetch the updated list of unassigned developers.
+        fetchUnassignedDevelopers();
+        setSelectedDeveloper(""); // Reset selected developer
+      } else {
+        console.error("Error adding developer:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error adding developer:", error);
+    }
+  };
+
   if (!project) return <div>Loading...</div>;
 
   return (
@@ -102,13 +122,7 @@ const ProjectDetailManager = () => {
             </option>
           ))}
         </select>
-        <button
-          onClick={() => {
-            // You can add the functionality to assign the selected developer to the project here
-          }}
-        >
-          Add
-        </button>
+        <button onClick={handleAddDeveloperToProject}>Add</button>
       </div>
     </div>
   );
