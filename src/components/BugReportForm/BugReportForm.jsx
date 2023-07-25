@@ -1,8 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
-const BugReportForm = ({ projectId }) => {
-  const { currentUser } = useContext(AuthContext); // currentUser contains details of the logged-in user
+const BugReportForm = () => {
+  const { projectId } = useParams();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -11,7 +12,6 @@ const BugReportForm = ({ projectId }) => {
     actualResult: "",
     priority: "Medium",
     project: projectId,
-    createdBy: currentUser.id,
   });
 
   const handleInputChange = (event) => {

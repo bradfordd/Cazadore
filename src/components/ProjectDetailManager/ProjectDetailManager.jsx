@@ -125,6 +125,8 @@ const ProjectDetailManager = () => {
         </select>
         <button onClick={handleAddDeveloperToProject}>Add</button>
       </div>
+      <h2>Submit a Bug Report</h2>
+      <BugReportForm />
     </div>
   );
 };
