@@ -299,6 +299,32 @@ exports.closeBugReport = async (req, res) => {
   }
 };
 
+exports.getBugReportsByProjectId = async (req, res) => {
+  try {
+    const projectId = req.params.projectId;
+
+    const bugReports = await BugReport.find({
+      project: projectId,
+      isActive: true,
+    })
+      .populate("assignedTo", "-password -__v")
+      .populate("createdBy", "-password -__v");
+
+    // If there are no active bug reports associated with the project
+    if (!bugReports.length) {
+      return res
+        .status(404)
+        .json({ message: "No active bug reports found for this project." });
+    }
+
+    // Send success response
+    res.status(200).json(bugReports);
+  } catch (error) {
+    // Send error response
+    res.status(500).json({ error: error.message });
+  }
+};
+
 exports.reactivateBugReport = async (req, res) => {
   try {
     // Try to find the bug report by ID and update the isActive field

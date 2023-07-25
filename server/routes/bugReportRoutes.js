@@ -51,4 +51,6 @@ router.put(
   bugReportController.closeBugReport
 );
 
+router.get("/project/:projectId", bugReportController.getBugReportsByProjectId);
+
 module.exports = router;
