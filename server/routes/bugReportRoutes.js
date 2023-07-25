@@ -8,12 +8,7 @@ const authorizeBugReportRetirement = require("../middleware/authorizeBugReportRe
 const verifyCreateBugReportPermission = require("../middleware/verifyCreateBugReportPermission");
 const verifyUpdateBugReportPermission = require("../middleware/verifyUpdateBugReportPermission");
 
-router.post(
-  "/create",
-  authenticateJWT,
-  verifyCreateBugReportPermission,
-  bugReportController.createBugReport
-);
+router.post("/create", authenticateJWT, bugReportController.createBugReport);
 
 // Get all bug reports - now supports pagination via query parameters 'page' and 'limit'
 router.get("/all", bugReportController.getAllBugReports);

@@ -82,6 +82,8 @@ exports.updateBugReport = async (req, res) => {
 
 exports.createBugReport = async (req, res) => {
   try {
+    console.log("Starting createBugReport...");
+
     // Extract most fields from req.body as before
     const {
       title,
@@ -93,19 +95,26 @@ exports.createBugReport = async (req, res) => {
       projectId,
     } = req.body;
 
+    console.log("Request Body: ", req.body);
+    console.log("Received data from request:", req.body);
+
     // Use req.user.id directly as createdBy
     const createdBy = req.user.id;
 
-    // Check if the token's userId matches the createdBy
-    if (req.user.id !== createdBy) {
-      return res.status(403).json({ error: "Unauthorized" });
-    }
+    console.log("CreatedBy (from token):", createdBy);
+
+    console.log("createdBy: ", createdBy);
+    console.log("projectID: ", req.body.projectId);
 
     // Check if project and creator exist
-    const project = await Project.findById(projectId);
+    const project = await Project.findById(req.body.projectId);
     const creator = await User.findById(createdBy);
 
+    console.log("Found project:", project);
+    console.log("Found creator:", creator);
+
     if (!project || !creator) {
+      console.log("Invalid project ID or creator ID!");
       return res
         .status(400)
         .json({ error: "Invalid project ID or creator ID" });
@@ -116,7 +125,13 @@ exports.createBugReport = async (req, res) => {
     const isProjectManager =
       String(project.projectManager) === String(creator._id);
 
+    console.log("Is Team Member:", isTeamMember);
+    console.log("Is Project Manager:", isProjectManager);
+
     if (!(isTeamMember || isProjectManager)) {
+      console.log(
+        "User is not authorized to create bug report for this project!"
+      );
       return res.status(403).json({
         error:
           "User is neither a team member nor a project manager of the project",
@@ -137,12 +152,17 @@ exports.createBugReport = async (req, res) => {
       assignedTo: null, // not assigned yet
     });
 
+    console.log("New bug report to be saved:", newBugReport);
+
     // save bug report to database
     const savedBugReport = await newBugReport.save();
+
+    console.log("Saved bug report:", savedBugReport);
 
     // send success response
     res.status(201).json(savedBugReport);
   } catch (error) {
+    console.error("Error in createBugReport:", error);
     // send error response
     res.status(500).json({ error: error.message });
   }

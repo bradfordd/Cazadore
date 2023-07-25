@@ -11,7 +11,7 @@ const BugReportForm = () => {
     expectedResult: "",
     actualResult: "",
     priority: "Medium",
-    project: projectId,
+    projectId: projectId,
   });
 
   const handleInputChange = (event) => {
@@ -24,6 +24,7 @@ const BugReportForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log("formData: ", formData);
     try {
       const response = await axios.post(
         "http://localhost:5000/api/bugReports/create",
