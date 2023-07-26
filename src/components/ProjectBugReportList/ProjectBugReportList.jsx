@@ -42,8 +42,20 @@ const ProjectBugReportsList = () => {
       <ul>
         {bugReports.map((report) => (
           <li key={report._id}>
-            {report.title} - Status: {report.status}
-            {/* You can expand this to show more details or add a link to a detailed bug report page */}
+            <h3>
+              {report.title} - Status: {report.status}
+            </h3>
+            <div>
+              <p>Description: {report.description}</p>
+              <p>Steps to Reproduce: {report.stepsToReproduce}</p>
+              <p>Expected Result: {report.expectedResult}</p>
+              <p>Actual Result: {report.actualResult}</p>
+              <p>Priority: {report.priority}</p>
+              <p>Created By: {report.createdBy.username}</p>
+              <p>Created At: {new Date(report.createdAt).toLocaleString()}</p>
+              <p>Updated At: {new Date(report.updatedAt).toLocaleString()}</p>
+              {/* Add more details if needed */}
+            </div>
           </li>
         ))}
       </ul>
