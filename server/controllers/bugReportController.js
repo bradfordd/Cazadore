@@ -220,29 +220,65 @@ exports.getAllBugReports = async (req, res) => {
 
 exports.assignBugReport = async (req, res) => {
   try {
-    // Validate the user ID
-    const user = await User.findById(req.body.userId);
-    if (!user) {
-      return res.status(400).json({ error: "Invalid user ID" });
+    console.log("Assign Bug Report function called.");
+
+    // Check if the user object is attached to the request
+    if (!req.user || !req.user._id) {
+      console.log("User not authenticated.");
+      return res
+        .status(401)
+        .json({ error: "Authentication required to assign the bug report." });
     }
 
-    // Update the bug report's assignedTo field
-    const updatedBugReport = await BugReport.findByIdAndUpdate(
-      req.params.id,
-      { assignedTo: req.body.userId },
-      {
-        new: true, // option that returns the new version of the updated document
-        runValidators: true, // validates the update operation against the model's schema
-      }
-    ).populate("assignedTo", "_id username"); // Populate the 'assignedTo' field
+    console.log(`Authenticated User ID: ${req.user._id}`);
 
-    // If no bug report was found with the provided ID, return an error
-    if (!updatedBugReport) {
-      return res.status(404).json({ error: "Bug report not found" });
+    console.log("Bug Report ID: ", req.params.id);
+
+    // Fetch the bug report
+    const bugReport = await BugReport.findById(req.params.id).populate(
+      "project"
+    );
+
+    if (!bugReport) {
+      console.log("Bug report not found.");
+      return res.status(404).json({ error: "Bug report not found." });
     }
 
-    res.status(200).json(updatedBugReport);
+    console.log(`Bug Report found for Project: ${bugReport.project.name}`);
+
+    // Ensure the logged-in user is the project manager
+    if (String(bugReport.project.projectManager) !== String(req.user._id)) {
+      console.log("User is not the project manager.");
+      return res
+        .status(403)
+        .json({ error: "Only project managers can assign bug reports." });
+    }
+
+    console.log("User is the project manager.");
+
+    // Check if the user they want to assign is a part of the project's team members
+    const isUserInTeam = bugReport.project.teamMembers.some(
+      (memberId) => String(memberId) === String(req.body.userIdToAssign)
+    );
+
+    if (!isUserInTeam) {
+      console.log("User to assign is not part of the project team.");
+      return res
+        .status(403)
+        .json({ error: "The user is not a part of this project's team." });
+    }
+
+    console.log("User to assign is part of the project team.");
+
+    // Assign the user to the bug report
+    bugReport.assignedTo = req.body.userIdToAssign;
+    await bugReport.save();
+
+    console.log("Bug Report assigned successfully.");
+
+    res.status(200).json(bugReport);
   } catch (error) {
+    console.error("Error in assignBugReport function:", error.message);
     res.status(500).json({ error: error.message });
   }
 };
