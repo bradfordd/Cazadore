@@ -8,7 +8,6 @@ import { Link, useParams } from "react-router-dom";
 
 function BugReportDetail() {
   const { projectId, bugReportId } = useParams();
-  const [users] = useState([]);
   const [pendingUser, setPendingUser] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [comments, setComments] = useState([]);
@@ -16,6 +15,7 @@ function BugReportDetail() {
   const [currentUser, setCurrentUser] = useState(null);
   const [bug, setBug] = useState(null);
   const [assignedUser, setAssignedUser] = useState("");
+  const [users, setUsers] = useState([]);
 
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
@@ -54,7 +54,23 @@ function BugReportDetail() {
     };
 
     fetchBug();
-  }, [bugReportId]);
+    const fetchParticipants = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/projects/${projectId}/participants`,
+          {
+            credentials: "include",
+          }
+        );
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error("Error fetching participants:", error);
+      }
+    };
+
+    fetchParticipants();
+  }, [bugReportId, projectId]);
 
   const assignBug = async () => {
     if (pendingUser) {

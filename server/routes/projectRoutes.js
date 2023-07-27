@@ -69,4 +69,7 @@ router.get(
   projectController.getUnassignedDevelopers
 );
 
+// Get all users who are either a project manager or a developer for a specific project
+router.get("/:id/participants", projectController.getProjectParticipants);
+
 module.exports = router;

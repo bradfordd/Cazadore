@@ -252,6 +252,36 @@ const projectController = {
       res.status(500).json({ message: err.message });
     }
   },
+  getProjectParticipants: async (req, res) => {
+    try {
+      const projectId = req.params.id;
+
+      // Fetch the project
+      const project = await Project.findById(projectId);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found." });
+      }
+
+      // Fetch the project manager
+      const projectManager = await User.findById(project.projectManager).select(
+        "-password"
+      ); // Omit the password field
+
+      // Fetch the team members
+      const teamMembers = await User.find({
+        _id: { $in: project.teamMembers },
+      }).select("-password"); // Omit the password field
+
+      // Combine the project manager and team members into a single list
+      const participants = [projectManager, ...teamMembers];
+
+      res.json(participants);
+    } catch (err) {
+      console.error("Error occurred in getProjectParticipants:", err);
+      return res.status(500).json({ message: err.message });
+    }
+  },
+
   getProjectsOfDeveloper: async (req, res, next) => {
     console.log("Entering getProjectsOfDeveloper function..."); // Log when we enter the function
 
