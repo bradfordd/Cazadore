@@ -220,6 +220,7 @@ exports.getAllBugReports = async (req, res) => {
 
 exports.assignBugReport = async (req, res) => {
   try {
+    console.log("req.body: ", req.body);
     console.log("Assign Bug Report function called.");
 
     // Check if the user object is attached to the request
@@ -256,22 +257,36 @@ exports.assignBugReport = async (req, res) => {
 
     console.log("User is the project manager.");
 
-    // Check if the user they want to assign is a part of the project's team members
-    const isUserInTeam = bugReport.project.teamMembers.some(
-      (memberId) => String(memberId) === String(req.body.userIdToAssign)
+    // Check if the user they want to assign is a part of the project's team members or is the project manager
+    const isUserInTeam =
+      bugReport.project.teamMembers.some(
+        (memberId) => String(memberId) === String(req.body.userId)
+      ) || String(bugReport.project.projectManager) === String(req.body.userId);
+
+    // Console logs for debugging:
+    console.log(`User to assign ID: ${req.body.userIdToAssign}`);
+    console.log(`Project manager ID: ${bugReport.project.projectManager}`);
+    console.log(`List of team members' IDs: ${bugReport.project.teamMembers}`);
+    console.log(
+      `Is user in the team or is the project manager? ${isUserInTeam}`
     );
 
     if (!isUserInTeam) {
-      console.log("User to assign is not part of the project team.");
-      return res
-        .status(403)
-        .json({ error: "The user is not a part of this project's team." });
+      console.log(
+        "User to assign is not part of the project team or is not the project manager."
+      );
+      return res.status(403).json({
+        error:
+          "The user is not a part of this project's team or is not the project manager.",
+      });
     }
 
-    console.log("User to assign is part of the project team.");
+    console.log(
+      "User to assign is part of the project team or is the project manager."
+    );
 
     // Assign the user to the bug report
-    bugReport.assignedTo = req.body.userIdToAssign;
+    bugReport.assignedTo = req.body.userId;
     await bugReport.save();
 
     console.log("Bug Report assigned successfully.");

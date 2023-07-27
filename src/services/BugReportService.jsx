@@ -32,12 +32,19 @@ export default {
     return response.data;
   },
   assignBugToUser: async (bugReportId, userId) => {
-    const response = await axios.patch(
-      `http://localhost:5000/api/bugReports/${bugReportId}/assign`,
-      { userId: userId }
-    );
-    return response.data;
+    try {
+      const response = await axios.patch(
+        `http://localhost:5000/api/bugReports/${bugReportId}/assign`,
+        { userId: userId },
+        { withCredentials: true } // This includes credentials like cookies
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error assigning bug to user:", error);
+      throw error; // You might want to handle this error appropriately in the calling function.
+    }
   },
+
   retireBugReport: async (bugReportId) => {
     const response = await axios.put(
       `http://localhost:5000/api/bugReports/${bugReportId}/retire`,
