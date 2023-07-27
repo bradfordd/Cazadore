@@ -2,19 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const ProjectBugReportsList = () => {
   const { projectId } = useParams();
   const [bugReports, setBugReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedBug, setSelectedBug] = useState(null);
-
-  const handleBugSelect = (bug) => {
-    setSelectedBug(bug);
-    // Any other logic that you want to run when a bug is selected
-  };
 
   useEffect(() => {
     const fetchBugReports = async () => {
@@ -63,9 +57,9 @@ const ProjectBugReportsList = () => {
               <p>Created By: {report.createdBy.username}</p>
               <p>Created At: {new Date(report.createdAt).toLocaleString()}</p>
               <p>Updated At: {new Date(report.updatedAt).toLocaleString()}</p>
-              <button onClick={() => handleBugSelect(report)}>
+              <Link to={`/projects/${projectId}/bug-reports/${report._id}`}>
                 Select Bug
-              </button>
+              </Link>
               {/* Add more details if needed */}
             </div>
           </li>

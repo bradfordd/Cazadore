@@ -11,6 +11,7 @@ import Homepage from "../Homepage/Homepage";
 import ProjectDetailDeveloper from "../ProjectDetailDeveloper/ProjectDetailDeveloper";
 import ProjectDetailManager from "../ProjectDetailManager/ProjectDetailManager";
 import BugReportsList from "../ProjectBugReportList/ProjectBugReportList";
+import BugReportDetail from "../BugReportDetail/BugReportDetail";
 import "./App.css";
 import axios from "axios";
 
@@ -43,6 +44,10 @@ function App() {
         <Route
           path="/projects/:projectId/bug-reports"
           element={<BugReportsList />}
+        />
+        <Route
+          path="/projects/:projectId/bug-reports/:bugReportId"
+          element={<BugReportDetail />}
         />
       </Routes>
     </Router>

@@ -4,20 +4,21 @@ import BugReportService from "../../services/BugReportService";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import jwt_decode from "jwt-decode";
+import { Link, useParams } from "react-router-dom";
 
-function BugReportDetail({ bug, goBack }) {
+function BugReportDetail() {
+  const { projectId, bugReportId } = useParams();
   const [users] = useState([]);
   const [pendingUser, setPendingUser] = useState("");
-  const [assignedUser, setAssignedUser] = useState(bug.assignedTo || "");
   const [showModal, setShowModal] = useState(false);
   const [comments, setComments] = useState([]);
   const [newCommentText, setNewCommentText] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
+  const [bug, setBug] = useState(null);
+  const [assignedUser, setAssignedUser] = useState("");
 
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
-
-  // Fetch all users when component mounts
 
   useEffect(() => {
     const allCookies = document.cookie;
@@ -46,13 +47,14 @@ function BugReportDetail({ bug, goBack }) {
 
     const fetchBug = async () => {
       console.log("fetchBug triggered");
-      const bugReport = await BugReportService.getBugReportById(bug._id);
+      const bugReport = await BugReportService.getBugReportById(bugReportId);
       console.log("Fetched bug report: ", bugReport);
+      setBug(bugReport);
       setComments(bugReport.comments);
     };
 
     fetchBug();
-  }, [bug._id]);
+  }, [bugReportId]);
 
   const assignBug = async () => {
     if (pendingUser) {
@@ -81,7 +83,6 @@ function BugReportDetail({ bug, goBack }) {
   const retireBug = async () => {
     await BugReportService.retireBugReport(bug._id);
     handleClose();
-    goBack();
   };
 
   const deleteComment = async (commentId) => {
@@ -96,50 +97,54 @@ function BugReportDetail({ bug, goBack }) {
 
   return (
     <div>
-      <h1>{bug.title}</h1>
-      <p>Steps to Reproduce: {bug.stepsToReproduce}</p>
-      <p>Expected Result: {bug.expectedResult}</p>
-      <p>Actual Result: {bug.actualResult}</p>
-      <p>Priority: {bug.priority}</p>
-      <p>Status: {bug.status}</p>
-      <p>{bug.description}</p>
-      <p>
-        Created by:{" "}
-        {bug.createdBy && bug.createdBy.username
-          ? bug.createdBy.username
-          : "Not Assigned"}
-      </p>
-      <p>
-        Assigned to:{" "}
-        {assignedUser && assignedUser.username
-          ? assignedUser.username
-          : "Not Assigned"}
-      </p>
-      {console.log("Bug: ", bug)}
-      {console.log("CurrentUser: ", currentUser)}
-      {bug && currentUser && currentUser._id === bug.createdBy._id && (
+      {bug ? (
         <>
-          <label>
-            Assign to:
-            <select
-              value={pendingUser}
-              onChange={(event) => {
-                setPendingUser(event.target.value);
-              }}
-            >
-              <option value="">Select a user</option>
-              {users.map((user) => (
-                <option key={user._id} value={user._id}>
-                  {user.username}
-                </option>
-              ))}
-            </select>
-          </label>
-          <button onClick={assignBug}>Assign</button>
-          <button onClick={handleShow}>Retire Bug Report</button>
+          <h1>{bug.title}</h1>
+          <p>Steps to Reproduce: {bug.stepsToReproduce}</p>
+          <p>Expected Result: {bug.expectedResult}</p>
+          <p>Actual Result: {bug.actualResult}</p>
+          <p>Priority: {bug.priority}</p>
+          <p>Status: {bug.status}</p>
+          <p>{bug.description}</p>
+          <p>
+            Created by:{" "}
+            {bug.createdBy && bug.createdBy.username
+              ? bug.createdBy.username
+              : "Not Assigned"}
+          </p>
+          <p>
+            Assigned to:{" "}
+            {assignedUser && assignedUser.username
+              ? assignedUser.username
+              : "Not Assigned"}
+          </p>
+          {currentUser && currentUser._id === bug.createdBy._id && (
+            <>
+              <label>
+                Assign to:
+                <select
+                  value={pendingUser}
+                  onChange={(event) => {
+                    setPendingUser(event.target.value);
+                  }}
+                >
+                  <option value="">Select a user</option>
+                  {users.map((user) => (
+                    <option key={user._id} value={user._id}>
+                      {user.username}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button onClick={assignBug}>Assign</button>
+              <button onClick={handleShow}>Retire Bug Report</button>
+            </>
+          )}
         </>
+      ) : (
+        <h1>Loading...</h1>
       )}
-      )<button onClick={goBack}>Back to List</button>
+      <button>Back to List</button>
       <Modal show={showModal} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Retire Bug Report</Modal.Title>
@@ -156,39 +161,12 @@ function BugReportDetail({ bug, goBack }) {
           </Button>
         </Modal.Footer>
       </Modal>
-      {comments.length > 0 && (
-        <div>
-          <h2>Comments</h2>
-          {comments.map((comment, index) => (
-            <div key={index}>
-              <p>{comment.content}</p>
-              <p>Posted by: {comment.postedBy.username}</p>
-              // Show the delete button only if the current user's ID matches
-              the comment's user ID
-              {bug &&
-                currentUser &&
-                currentUser._id === comment.postedBy._id && (
-                  <button onClick={() => deleteComment(comment._id)}>
-                    Delete
-                  </button>
-                )}
-            </div>
-          ))}
-        </div>
-      )}
       <form
         onSubmit={(event) => {
           event.preventDefault();
           addComment();
         }}
-      >
-        <textarea
-          value={newCommentText}
-          onChange={(event) => setNewCommentText(event.target.value)}
-          placeholder="Add a comment"
-        />
-        <button type="submit">Submit</button>
-      </form>
+      ></form>
     </div>
   );
 }
