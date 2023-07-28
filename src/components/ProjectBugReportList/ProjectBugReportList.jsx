@@ -10,6 +10,19 @@ const ProjectBugReportsList = () => {
   const [bugReports, setBugReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [project, setProject] = useState(null);
+
+  const Breadcrumbs = () => {
+    return (
+      <nav className="breadcrumbs">
+        <Link to="/homepage">Homepage</Link>
+        <Link to={`/projects/${projectId}`}>
+          {project ? project.name : projectId}
+        </Link>{" "}
+        Bug Reports
+      </nav>
+    );
+  };
 
   useEffect(() => {
     const fetchBugReports = async () => {
@@ -30,8 +43,25 @@ const ProjectBugReportsList = () => {
         setLoading(false);
       }
     };
+    const fetchProjectDetails = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/projects/${projectId}`,
+          { withCredentials: true }
+        );
+
+        if (response.status === 200) {
+          setProject(response.data);
+        } else {
+          setError("Unexpected response status:", response.status);
+        }
+      } catch (err) {
+        setError(err.message);
+      }
+    };
 
     fetchBugReports();
+    fetchProjectDetails();
   }, [projectId]);
 
   if (loading) return <div>Loading...</div>;
@@ -40,6 +70,7 @@ const ProjectBugReportsList = () => {
   return (
     <div>
       <Navbar />
+      <Breadcrumbs />
       <h2>Bug Reports for Project ID: {projectId}</h2>
       <ul>
         {bugReports.map((report) => (

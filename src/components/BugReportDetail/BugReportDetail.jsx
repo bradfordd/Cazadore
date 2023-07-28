@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import jwt_decode from "jwt-decode";
 import { Link, useParams } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
+import Breadcrumb from "../Breadcrumb/Breadcrumb";
 
 function BugReportDetail() {
   const { projectId, bugReportId } = useParams();
@@ -17,9 +18,21 @@ function BugReportDetail() {
   const [bug, setBug] = useState(null);
   const [assignedUser, setAssignedUser] = useState("");
   const [users, setUsers] = useState([]);
+  const [projectName, setProjectName] = useState("");
 
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
+
+  const Breadcrumbs = () => {
+    return (
+      <nav className="breadcrumbs">
+        <Link to="/homepage">Homepage</Link>
+        <Link to={`/projects/${projectId}`}>{projectName || projectId}</Link>
+        <Link to={`/projects/${projectId}/bug-reports`}>Bug Reports</Link>
+        Bug Detail
+      </nav>
+    );
+  };
 
   useEffect(() => {
     const allCookies = document.cookie;
@@ -76,6 +89,21 @@ function BugReportDetail() {
     };
 
     fetchParticipants();
+
+    const fetchProjectName = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/projects/${projectId}`,
+          { credentials: "include" }
+        );
+        const data = await response.json();
+        setProjectName(data.name); // Assuming the project object has a "name" field
+      } catch (error) {
+        console.error("Error fetching project name:", error);
+      }
+    };
+
+    fetchProjectName();
   }, [bugReportId, projectId]);
 
   const assignBug = async () => {
@@ -120,6 +148,7 @@ function BugReportDetail() {
   return (
     <div>
       <Navbar />
+      <Breadcrumbs />
       {bug ? (
         <>
           <h1>{bug.title}</h1>
