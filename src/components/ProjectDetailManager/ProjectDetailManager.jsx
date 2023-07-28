@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import BugReportForm from "../BugReportForm/BugReportForm";
 import Navbar from "../Navbar/Navbar";
+import Breadcrumb from "../Breadcrumb/Breadcrumb";
 
 const ProjectDetailManager = () => {
   const navigate = useNavigate();
@@ -10,6 +11,17 @@ const ProjectDetailManager = () => {
   const [unassignedDevelopers, setUnassignedDevelopers] = useState([]);
   const [selectedDeveloper, setSelectedDeveloper] = useState("");
   const { projectId } = useParams();
+
+  const breadcrumbs = [
+    {
+      label: "Homepage",
+      path: "/homepage",
+    },
+    {
+      label: project ? project.name : "Loading...", // Handle potential null value for project
+      path: null,
+    },
+  ];
 
   console.log("Params:", projectId); // Log the projectId
 
@@ -110,6 +122,7 @@ const ProjectDetailManager = () => {
   return (
     <div>
       <Navbar />
+      <Breadcrumb crumbs={breadcrumbs} />
       <h2>Project Details</h2>
       <h3>{project.name}</h3>
       <p>{project.description}</p>
