@@ -264,7 +264,7 @@ exports.assignBugReport = async (req, res) => {
       ) || String(bugReport.project.projectManager) === String(req.body.userId);
 
     // Console logs for debugging:
-    console.log(`User to assign ID: ${req.body.userIdToAssign}`);
+    console.log(`User to assign ID: ${req.body.userId}`);
     console.log(`Project manager ID: ${bugReport.project.projectManager}`);
     console.log(`List of team members' IDs: ${bugReport.project.teamMembers}`);
     console.log(
@@ -287,6 +287,7 @@ exports.assignBugReport = async (req, res) => {
 
     // Assign the user to the bug report
     bugReport.assignedTo = req.body.userId;
+    bugReport.populate("assignedTo", "_id username");
     await bugReport.save();
 
     console.log("Bug Report assigned successfully.");

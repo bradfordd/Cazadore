@@ -51,6 +51,11 @@ function BugReportDetail() {
       console.log("Fetched bug report: ", bugReport);
       setBug(bugReport);
       setComments(bugReport.comments);
+      if (bugReport && bugReport.assignedTo) {
+        setAssignedUser(bugReport.assignedTo);
+      } else {
+        console.log("bugReport.assignedTo is undefined or null");
+      }
     };
 
     fetchBug();
@@ -78,7 +83,7 @@ function BugReportDetail() {
         bug._id,
         pendingUser
       );
-      console.log(updatedBug);
+      console.log("updated Bug: ", updatedBug.assignedTo);
       if (updatedBug && updatedBug.assignedTo) {
         setAssignedUser(updatedBug.assignedTo);
       }
