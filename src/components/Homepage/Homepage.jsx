@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ProjectDashboardManager from "../ProjectDashboardManager/ProjectDashboardManager";
 import ProjectDashboardDeveloper from "../ProjectDashboardDeveloper/ProjectDashboardDeveloper";
+import Navbar from "../Navbar/Navbar";
 
 const Homepage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -42,6 +43,7 @@ const Homepage = () => {
 
   return (
     <div>
+      <Navbar />
       {userRole === "project manager" && <ProjectDashboardManager />}
       {userRole === "developer" && <ProjectDashboardDeveloper />}
     </div>

@@ -1,18 +1,18 @@
 import { useState } from "react";
 import logo from "../../assets/logo.png";
 import "./Navbar.css";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     <nav>
-      <img src={logo} alt="Company Logo" />
       {isLoggedIn && (
         <ul>
-          <li>
-            <a href="/profile">Profile</a>
-          </li>
+          <Link to="/homepage">
+            <img src={logo} alt="Company Logo" />
+          </Link>
           <li>
             <a href="/logout" onClick={() => setIsLoggedIn(false)}>
               Logout
@@ -23,6 +23,9 @@ const Navbar = () => {
       )}
       {!isLoggedIn && (
         <ul>
+          <Link to="/homepage">
+            <img src={logo} alt="Company Logo" />
+          </Link>
           <li>
             <a href="/login">Login</a>
           </li>

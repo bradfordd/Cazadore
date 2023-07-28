@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import BugReportForm from "../BugReportForm/BugReportForm";
+import Navbar from "../Navbar/Navbar";
 
 const ProjectDetailManager = () => {
   const navigate = useNavigate();
@@ -108,6 +109,7 @@ const ProjectDetailManager = () => {
 
   return (
     <div>
+      <Navbar />
       <h2>Project Details</h2>
       <h3>{project.name}</h3>
       <p>{project.description}</p>

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
+import Navbar from "../Navbar/Navbar";
 
 const ProjectBugReportsList = () => {
   const { projectId } = useParams();
@@ -38,6 +39,7 @@ const ProjectBugReportsList = () => {
 
   return (
     <div>
+      <Navbar />
       <h2>Bug Reports for Project ID: {projectId}</h2>
       <ul>
         {bugReports.map((report) => (

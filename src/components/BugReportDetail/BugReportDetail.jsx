@@ -5,6 +5,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import jwt_decode from "jwt-decode";
 import { Link, useParams } from "react-router-dom";
+import Navbar from "../Navbar/Navbar";
 
 function BugReportDetail() {
   const { projectId, bugReportId } = useParams();
@@ -118,6 +119,7 @@ function BugReportDetail() {
 
   return (
     <div>
+      <Navbar />
       {bug ? (
         <>
           <h1>{bug.title}</h1>
