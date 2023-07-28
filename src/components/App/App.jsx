@@ -33,14 +33,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/homepage" element={<Homepage />} />
-        <Route
-          path="/project/developer/:projectId"
+        {/* <Route
+          path="/project/:projectId"
           element={<ProjectDetailDeveloper />}
-        />
-        <Route
-          path="/project/manager/:projectId"
-          element={<ProjectDetailManager />}
-        />
+        />  */}
+        <Route path="/projects/:projectId" element={<ProjectDetailManager />} />
         <Route
           path="/projects/:projectId/bug-reports"
           element={<BugReportsList />}
