@@ -8,6 +8,7 @@ import {
 import Login from "../Login/Login";
 import Register from "../Register/Register";
 import Homepage from "../Homepage/Homepage";
+import withRoleBasedRendering from "../../hocs/withRoleBasedRendering";
 import ProjectDetailDeveloper from "../ProjectDetailDeveloper/ProjectDetailDeveloper";
 import ProjectDetailManager from "../ProjectDetailManager/ProjectDetailManager";
 import BugReportsList from "../ProjectBugReportList/ProjectBugReportList";

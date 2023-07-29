@@ -1,7 +1,7 @@
 // withRoleBasedRendering.js (Your HOC)
 
 import React from "react";
-import { getCurrentUserRole } from "./authService";
+import { getCurrentUserRole } from "../services/AuthService";
 
 export default function withRoleBasedRendering(
   ManagerComponent,
@@ -12,12 +12,6 @@ export default function withRoleBasedRendering(
     const userRole = getCurrentUserRole();
 
     switch (userRole) {
-      case "manager":
-        return <ManagerComponent {...props} />;
-      case "developer":
-        return <DeveloperComponent {...props} />;
-      default:
-        return <DefaultComponent {...props} />;
     }
   };
 }
