@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import ProjectDashboardManager from "../ProjectDashboardManager/ProjectDashboardManager";
 import ProjectDashboardDeveloper from "../ProjectDashboardDeveloper/ProjectDashboardDeveloper";
 import Navbar from "../Navbar/Navbar";
+import withRoleBasedRendering from "../../hocs/withRoleBasedRendering";
 
 const Homepage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -41,11 +42,15 @@ const Homepage = () => {
     return <div>Loading...</div>;
   }
 
+  const DashboardBasedOnRole = withRoleBasedRendering(
+    ProjectDashboardManager,
+    ProjectDashboardDeveloper
+  );
+
   return (
     <div>
       <Navbar />
-      {userRole === "project manager" && <ProjectDashboardManager />}
-      {userRole === "developer" && <ProjectDashboardDeveloper />}
+      <DashboardBasedOnRole />
     </div>
   );
 };
