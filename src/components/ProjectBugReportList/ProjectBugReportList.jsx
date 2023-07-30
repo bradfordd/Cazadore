@@ -71,7 +71,7 @@ const ProjectBugReportsList = () => {
     <div>
       <Navbar />
       <Breadcrumbs />
-      <h2>Bug Reports for Project ID: {projectId}</h2>
+      <h2>Bug Reports for {project ? project.name : "Project"}</h2>
       <ul>
         {bugReports.map((report) => (
           <li key={report._id}>

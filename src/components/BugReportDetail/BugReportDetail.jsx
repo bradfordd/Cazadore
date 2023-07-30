@@ -222,7 +222,9 @@ function BugReportDetail() {
       ) : (
         <h1>Loading...</h1>
       )}
-      <button>Back to List</button>
+      <Link to={`/projects/${projectId}/bug-reports`}>
+        <button>Back to List</button>
+      </Link>
       <Modal show={showModal} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Retire Bug Report</Modal.Title>
