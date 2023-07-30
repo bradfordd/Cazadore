@@ -26,6 +26,11 @@ const RedirectToLogin = () => {
   return null; // This component doesn't render anything
 };
 
+const RoleBasedProjectDetail = withRoleBasedRendering(
+  ProjectDetailManager,
+  ProjectDetailDeveloper
+);
+
 function App() {
   return (
     <Router>
@@ -38,7 +43,10 @@ function App() {
           path="/project/:projectId"
           element={<ProjectDetailDeveloper />}
         />  */}
-        <Route path="/projects/:projectId" element={<ProjectDetailManager />} />
+        <Route
+          path="/projects/:projectId"
+          element={<RoleBasedProjectDetail />}
+        />
         <Route
           path="/projects/:projectId/bug-reports"
           element={<BugReportsList />}

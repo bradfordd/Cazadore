@@ -44,9 +44,7 @@ const ProjectDashboardDeveloper = () => {
           {projects.map((project) => (
             <div key={project._id} className="project-card">
               <h3>
-                <Link to={`/project/developer/${project._id}`}>
-                  {project.name}
-                </Link>
+                <Link to={`/projects/${project._id}`}>{project.name}</Link>
               </h3>
               <h3>{project.name}</h3>
               <p>{project.description}</p>

@@ -19,6 +19,7 @@ function BugReportDetail() {
   const [assignedUser, setAssignedUser] = useState("");
   const [users, setUsers] = useState([]);
   const [projectName, setProjectName] = useState("");
+  const [isManager, setIsManager] = useState(false);
 
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
@@ -104,6 +105,25 @@ function BugReportDetail() {
     };
 
     fetchProjectName();
+
+    const checkIfManager = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/projects/isAssignedManager/${projectId}`,
+          {
+            credentials: "include",
+          }
+        );
+        const data = await response.json();
+        if (data.message === "User is the project manager.") {
+          setIsManager(true);
+        }
+      } catch (error) {
+        console.error("Error checking if user is assigned manager:", error);
+      }
+    };
+
+    checkIfManager();
   }, [bugReportId, projectId]);
 
   const assignBug = async () => {
@@ -170,7 +190,8 @@ function BugReportDetail() {
               ? assignedUser.username
               : "Not Assigned"}
           </p>
-          {currentUser && currentUser._id === bug.createdBy._id && (
+          {/* For the Assign Option */}
+          {isManager && (
             <>
               <label>
                 Assign to:
@@ -189,9 +210,14 @@ function BugReportDetail() {
                 </select>
               </label>
               <button onClick={assignBug}>Assign</button>
-              <button onClick={handleShow}>Retire Bug Report</button>
             </>
           )}
+
+          {/* For the Retire Bug Report Option */}
+          {(currentUser && currentUser._id === bug.createdBy._id) ||
+          isManager ? (
+            <button onClick={handleShow}>Retire Bug Report</button>
+          ) : null}
         </>
       ) : (
         <h1>Loading...</h1>
