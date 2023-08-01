@@ -50,7 +50,6 @@ const bugReportSchema = new mongoose.Schema(
       default: null,
     },
     isActive: {
-      // New field
       type: Boolean,
       default: true,
     },
