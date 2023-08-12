@@ -13,7 +13,7 @@ import ProjectDetailDeveloper from "../ProjectDetailDeveloper/ProjectDetailDevel
 import ProjectDetailManager from "../ProjectDetailManager/ProjectDetailManager";
 import BugReportsList from "../ProjectBugReportList/ProjectBugReportList";
 import BugReportDetail from "../BugReportDetail/BugReportDetail";
-import "./App.css";
+import "./App.module.css";
 import axios from "axios";
 
 // Create a Redirect component that navigates to the login page

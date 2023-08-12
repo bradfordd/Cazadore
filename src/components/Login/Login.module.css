@@ -1,0 +1,57 @@
+/* Login.css */
+.container {
+  background-color: black;
+  color: white;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  width: 600px;
+  align-items: center;
+  flex-direction: column;
+}
+
+.login-form {
+  width: 240px; /* Example width */
+  padding: 20px 30px; /* Bit of padding for spacing */
+  border-radius: 5px;
+}
+
+.login-form input {
+  width: 100%; /* Take full width of the form */
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 2px solid orange;
+  background: none;
+  color: orange;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Transition for smooth effects */
+}
+
+.login-form input:focus {
+  border-color: darkorange; /* Slightly different color on focus */
+  box-shadow: 0 0 5px darkorange; /* Shadow on focus */
+}
+
+.login-form input::placeholder {
+  color: #ff8c00; /* Lighter shade of orange for the placeholder */
+}
+
+.login-form button {
+  background: orange;
+  color: black;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+  transition: background-color 0.3s ease; /* Transition for smooth effects */
+}
+h1,
+h2 {
+  margin: 10px 0; /* Spacing adjustment */
+}
+
+.login-form button:hover {
+  background-color: darkorange; /* Darker shade on hover */
+}

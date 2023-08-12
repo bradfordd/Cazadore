@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
+import styles from "./Login.module.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -47,10 +47,11 @@ const Login = () => {
   };
 
   return (
-    <div className="container">
-      <Navbar />
+    <div className={styles.container}>
+      <Navbar />{" "}
+      {/* Assuming Navbar is a component you've imported elsewhere */}
       <h1>Login</h1>
-      <form className="login-form" onSubmit={handleSubmit}>
+      <form className={styles["login-form"]} onSubmit={handleSubmit}>
         <div>
           <label>Username:</label>
           <br />
@@ -71,7 +72,7 @@ const Login = () => {
             onChange={handlePasswordChange}
           />
         </div>
-        {error && <p>{error}</p>} {/* Displaying the error message */}
+        {error && <p>{error}</p>}
         <button type="submit">Login</button>
       </form>
       <div>
