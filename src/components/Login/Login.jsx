@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
-import styles from "./Login.module.css";
+import "./Login.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -47,11 +47,11 @@ const Login = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className="LoginComponent">
       <Navbar />{" "}
       {/* Assuming Navbar is a component you've imported elsewhere */}
       <h1>Login</h1>
-      <form className={styles["login-form"]} onSubmit={handleSubmit}>
+      <form className="login-form" onSubmit={handleSubmit}>
         <div>
           <label>Username:</label>
           <br />

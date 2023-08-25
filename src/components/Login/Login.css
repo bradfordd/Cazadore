@@ -1,13 +1,15 @@
 /* Login.css */
-.container {
+
+.LoginComponent {
   background-color: black;
   color: white;
   height: 100vh;
   display: flex;
   justify-content: center;
-  width: 600px;
   align-items: center;
   flex-direction: column;
+  width: 90%;
+  height: 90%;
 }
 
 .login-form {
@@ -54,4 +56,10 @@ h2 {
 
 .login-form button:hover {
   background-color: darkorange; /* Darker shade on hover */
+}
+
+#login-header {
+  font-size: 4em;
+  padding-top: 0.2em;
+  padding-bottom: 0.1em;
 }

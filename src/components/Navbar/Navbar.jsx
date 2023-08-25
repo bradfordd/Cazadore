@@ -1,21 +1,21 @@
 import { useState } from "react";
 import logo from "../../assets/logo.png";
-import styles from "./Navbar.module.css";
+import "./Navbar.css";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
-    <nav className={styles.navbar}>
+    <nav className="Navbar">
       {" "}
-      {/* Apply styles using styles object */}
+      {/* Apply using object */}
       {isLoggedIn && (
-        <ul className={styles.menu}>
-          <Link to="/homepage" className={styles.menuItem}>
-            <img src={logo} alt="Company Logo" className={styles.logo} />
+        <ul className="menu">
+          <Link to="/homepage" class="logoItem">
+            <img src={logo} alt="Company Logo" className="logo" />
           </Link>
-          <li className={styles.menuItem}>
+          <li className="menuItem">
             <a href="/logout" onClick={() => setIsLoggedIn(false)}>
               Logout
             </a>
@@ -24,14 +24,14 @@ const Navbar = () => {
         </ul>
       )}
       {!isLoggedIn && (
-        <ul className={styles.menu}>
-          <Link to="/homepage" className={styles.menuItem}>
-            <img src={logo} alt="Company Logo" className={styles.logo} />
+        <ul className="menu">
+          <Link to="/homepage" className="menuItem">
+            <img src={logo} alt="Company Logo" className="logo" />
           </Link>
-          <li className={styles.menuItem}>
+          <li className="menuItem">
             <a href="/login">Login</a>
           </li>
-          <li className={styles.menuItem}>
+          <li className="menuItem">
             <a href="/register">Register</a>
           </li>
         </ul>

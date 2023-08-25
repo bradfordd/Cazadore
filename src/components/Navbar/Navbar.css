@@ -1,6 +1,9 @@
 /* Navbar.css */
-
-nav {
+.Navbar {
+  height: 90%;
+  width: 90%;
+  font-size: 9px;
+  margin: 2em auto 0 auto;
   background: linear-gradient(to right, #333333, #1f1f1f);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   color: white;
@@ -10,29 +13,28 @@ nav {
   align-items: center;
 }
 
-nav img {
-  padding: 0px 15px 0px 15px;
-  width: 100px; /* Adjust as needed */
-  height: auto;
+.Navbar img {
+  padding: 0px;
 }
 
-nav ul {
+.Navbar ul {
+  margin: 0 auto;
   padding: 0px 15px 0px 15px;
   list-style: none;
   display: flex;
   align-items: center; /* This will vertically center align the li elements */
 }
 
-nav ul li {
+.Navbar ul li {
   margin-left: 15px;
 }
 
-nav ul li a {
+.Navbar ul li a {
   color: #fff;
   transition: color 0.3s ease;
   text-decoration: underline;
 }
 
-nav ul li a:hover {
+.Navbar ul li a:hover {
   color: #514ef5; /* Lighter shade for hover. Adjust color as necessary. */
 }
