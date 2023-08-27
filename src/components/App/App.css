@@ -8,26 +8,18 @@
 body {
   background: linear-gradient(45deg, darkred, goldenrod);
   font-family: Consolas, Monaco, "Droid Sans Mono", "Courier New", monospace;
-  margin: 0 auto; /* Remove default margin */
-  padding: 0; /* Remove default padding */
+  padding: 0.75em;
   min-height: 100vh;
-  min-width: 100vw; /* 100% of the viewport width */
+  min-width: 100vw;
   overflow: auto;
 }
 
 #root {
-  margin: 0 auto;
   padding: 0rem;
   text-align: center;
 }
 
 /* Local styles */
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
 
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
@@ -59,34 +51,28 @@ body {
 .read-the-docs {
   color: #888;
 }
+
 @media (min-width: 321px) {
-  body {
-    font-size: 16px; /* slightly larger font-size */
-  }
   /* additional styles for larger cellphones */
 }
 
 @media (min-width: 768px) {
-  body {
-    font-size: 18px;
-  }
   /* Other tablet-specific CSS */
 }
 
 /* Mobile-first media query for Desktop */
 @media (min-width: 1024px) {
-  body {
-    font-size: 20px;
-  }
   /* Other desktop-specific CSS */
 }
 
-/* Landscape */
-@media (orientation: landscape) {
-  /* Your landscape-specific CSS here */
+@media (min-height: 480px) {
+  /* CSS rules for small mobile devices */
 }
 
-/* Portrait */
-@media (orientation: portrait) {
-  /* Your portrait-specific CSS here */
+@media (min-height: 768px) {
+  /* CSS rules for tablets */
+}
+
+@media (min-height: 900px) {
+  /* CSS rules for desktop */
 }

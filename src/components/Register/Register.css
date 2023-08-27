@@ -1,0 +1,151 @@
+.registerComponent {
+  background-color: black;
+  color: orange;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 10px;
+}
+
+.registerComponent h1 {
+  color: orange;
+  text-align: center;
+  font-size: 3em;
+}
+
+.registerComponent .registerForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.registerComponent .error-message {
+  color: red;
+}
+
+.registerComponent .registerForm label {
+  color: orange;
+  margin-bottom: 0.5em;
+}
+
+.registerComponent .registerForm input {
+  margin-bottom: 10px;
+  padding: 0.5em;
+  border-radius: 0.5em;
+  border: 0.15em solid orange;
+  background: none;
+  color: orange;
+  background-color: black;
+}
+
+.registerComponent .registerForm input::placeholder {
+  color: orange;
+}
+
+.registerComponent .registerForm button {
+  background: orange;
+  color: black;
+  border: none;
+  padding: 0.5em;
+  border-radius: 0.5em;
+  cursor: pointer;
+  width: auto;
+  display: inline-block;
+  font-family: Consolas;
+  margin: 0.5em;
+}
+
+.registerComponent .registerForm button:hover {
+  background: #ff8c00; /* Darker orange when hovered */
+}
+
+.registerComponent .registerForm input[type="radio"] {
+  width: 0.6em;
+  height: 0.6em;
+  margin-right: 1em;
+}
+
+.registerComponent .registerLink {
+  margin: 2em;
+}
+
+@media (min-width: 321px) {
+  .registerComponent {
+    font-size: 1em;
+  }
+  .registerComponent .registerForm label {
+    font-size: 1.5em;
+  }
+  .registerComponent .registerForm input {
+    font-size: 1.25em;
+  }
+  .registerComponent .registerForm button {
+    font-size: 1.5em;
+  }
+  .registerComponent .registerLink a {
+    font-size: 1.25em;
+  }
+  .registerComponent .registerForm input[type="radio"] {
+    width: 0.6em;
+    height: 0.6em;
+  }
+}
+
+@media (min-width: 768px) {
+  .registerComponent {
+    font-size: 1.5em;
+  }
+  .registerComponent .registerForm label {
+    font-size: 2em;
+  }
+  .registerComponent .registerForm input {
+    font-size: 2em;
+  }
+  .registerComponent .registerForm button {
+    font-size: 2em;
+  }
+  .registerComponent .registerLink a {
+    font-size: 1.5em;
+  }
+  .registerComponent .registerForm input[type="radio"] {
+    width: 0.4em;
+    height: 0.4em;
+  }
+}
+
+/* Mobile-first media query for Desktop */
+@media (min-width: 1024px) {
+  .registerComponent {
+    font-size: 2em;
+  }
+  .registerComponent .registerForm label {
+    font-size: 3em;
+  }
+  .registerComponent .registerForm input {
+    font-size: 3em;
+  }
+  .registerComponent .registerForm button {
+    font-size: 3em;
+  }
+  .registerComponent .registerLink a {
+    font-size: 2em;
+  }
+  .registerComponent .registerForm input[type="radio"] {
+    width: 0.5em;
+    height: 0.5em;
+  }
+}
+
+@media (min-height: 480px) {
+  /* CSS rules for small mobile devices */
+}
+
+@media (min-height: 768px) {
+  /* CSS rules for tablets */
+}
+
+@media (min-height: 900px) {
+  /* CSS rules for desktop */
+}

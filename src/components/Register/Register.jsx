@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import styles from "./Register.module.css"; // updated import
+import "./Register.css";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import Tippy from "@tippyjs/react";
@@ -177,16 +177,16 @@ const Register = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className="registerComponent">
       <Navbar />
       <h1>Register</h1>
       {successMessage && (
         <p>
-          {styles.successMessage}
+          {"successMessage"}
           {successMessage}
         </p>
       )}
-      <form className={styles.registerForm} onSubmit={handleSubmit}>
+      <form className={"registerForm"} onSubmit={handleSubmit}>
         <div>
           <label>Username:</label>
           <br />
@@ -264,7 +264,7 @@ const Register = () => {
         {formError && <p className="form-error">{formError}</p>}
         <button type="submit">Register</button>
       </form>
-      <div className={styles.registerLink}>
+      <div className="registerLink">
         <Link to="/login">Already have an account? Login</Link>
       </div>
     </div>
