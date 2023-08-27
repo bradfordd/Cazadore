@@ -16,6 +16,9 @@ const Register = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [formError, setFormError] = useState("");
   const [role, setRole] = useState("developer");
+  const [usernameFocused, setUsernameFocused] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
+  const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
 
   const usernameTippyRef = useRef();
   const passwordTippyRef = useRef();
@@ -192,15 +195,16 @@ const Register = () => {
           <br />
           <Tippy
             content={usernameError}
-            onCreate={(tippy) => (usernameTippyRef.current = tippy)}
-            visible={!!usernameError}
-            placement="left"
+            visible={!!usernameError && usernameFocused}
+            placement="top"
           >
             <input
               type="text"
               name="username"
               required
               onChange={handleUsernameChange}
+              onFocus={() => setUsernameFocused(true)}
+              onBlur={() => setUsernameFocused(false)}
             />
           </Tippy>
         </div>
@@ -209,15 +213,16 @@ const Register = () => {
           <br />
           <Tippy
             content={passwordError}
-            onCreate={(tippy) => (passwordTippyRef.current = tippy)}
-            visible={!!passwordError}
-            placement="left"
+            visible={!!passwordError && passwordFocused}
+            placement="top"
           >
             <input
               type="password"
               name="password"
               required
               onChange={handlePasswordChange}
+              onFocus={() => setPasswordFocused(true)}
+              onBlur={() => setPasswordFocused(false)}
             />
           </Tippy>
         </div>
@@ -226,15 +231,16 @@ const Register = () => {
           <br />
           <Tippy
             content={confirmPasswordError}
-            onCreate={(tippy) => (confirmPasswordTippyRef.current = tippy)}
-            visible={!!confirmPasswordError}
-            placement="left"
+            visible={!!confirmPasswordError && confirmPasswordFocused}
+            placement="top"
           >
             <input
               type="password"
               name="confirmPassword"
               required
               onChange={handleConfirmPasswordChange}
+              onFocus={() => setConfirmPasswordFocused(true)}
+              onBlur={() => setConfirmPasswordFocused(false)}
             />
           </Tippy>
         </div>
