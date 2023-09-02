@@ -5,6 +5,7 @@ import ProjectDashboardManager from "../ProjectDashboardManager/ProjectDashboard
 import ProjectDashboardDeveloper from "../ProjectDashboardDeveloper/ProjectDashboardDeveloper";
 import Navbar from "../Navbar/Navbar";
 import withRoleBasedRendering from "../../hocs/withRoleBasedRendering";
+import "./Homepage.css";
 
 const Homepage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -48,7 +49,7 @@ const Homepage = () => {
   );
 
   return (
-    <div>
+    <div className="Homepage">
       <Navbar />
       <DashboardBasedOnRole />
     </div>

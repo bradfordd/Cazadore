@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import "./ProjectDashboardManager.css";
 
 const ManagedProjects = () => {
   const [projects, setProjects] = useState([]);
@@ -25,16 +26,16 @@ const ManagedProjects = () => {
   }, []);
 
   return (
-    <div>
+    <div className="projectDashboardManager">
       <h2>Managed Projects</h2>
       {projects.length > 0 ? (
         <ul>
           {projects.map((project) => (
             <li key={project._id}>
-              <h3>
-                <Link to={`/projects/${project._id}`}>{project.name}</Link>
-              </h3>
-              <p>{project.description}</p>
+              <Link to={`/projects/${project._id}`}>
+                <h3>{project.name}</h3>
+                <p>{project.description}</p>
+              </Link>
             </li>
           ))}
         </ul>
