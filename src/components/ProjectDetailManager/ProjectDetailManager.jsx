@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import BugReportForm from "../BugReportForm/BugReportForm";
 import Navbar from "../Navbar/Navbar";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
+import SidebarManager from "../SidebarManager/SidebarManager";
 
 const ProjectDetailManager = () => {
   const navigate = useNavigate();

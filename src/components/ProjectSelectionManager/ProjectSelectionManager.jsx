@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import "./ProjectDashboardManager.css";
+import "./ProjectSelectionManager.css";
 
 const ManagedProjects = () => {
   const [projects, setProjects] = useState([]);
@@ -26,8 +26,8 @@ const ManagedProjects = () => {
   }, []);
 
   return (
-    <div className="projectDashboardManager">
-      <h2>Managed Projects</h2>
+    <div className="projectSelectionManager">
+      <h2>Select a Project to Manage</h2>
       {projects.length > 0 ? (
         <ul>
           {projects.map((project) => (

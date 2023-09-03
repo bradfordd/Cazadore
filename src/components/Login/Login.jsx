@@ -47,40 +47,42 @@ const Login = () => {
   };
 
   return (
-    <div className="LoginComponent">
-      <Navbar />{" "}
-      {/* Assuming Navbar is a component you've imported elsewhere */}
-      <h1>Login</h1>
-      <form className="login-form" onSubmit={handleSubmit}>
+    <div>
+      <Navbar />
+      <div className="LoginComponent">
+        {/* Assuming Navbar is a component you've imported elsewhere */}
+        <h1>Login</h1>
+        <form className="login-form" onSubmit={handleSubmit}>
+          <div>
+            <label>Username:</label>
+            <br />
+            <input
+              type="text"
+              name="username"
+              required
+              onChange={handleUsernameChange}
+            />
+          </div>
+          <div>
+            <label>Password:</label>
+            <br />
+            <input
+              type="password"
+              name="password"
+              required
+              onChange={handlePasswordChange}
+            />
+          </div>
+          {error && <p>{error}</p>}
+          <button type="submit">Login</button>
+        </form>
         <div>
-          <label>Username:</label>
-          <br />
-          <input
-            type="text"
-            name="username"
-            required
-            onChange={handleUsernameChange}
-          />
+          <Link to="/register">
+            Don't have an account?
+            <br />
+            Register
+          </Link>
         </div>
-        <div>
-          <label>Password:</label>
-          <br />
-          <input
-            type="password"
-            name="password"
-            required
-            onChange={handlePasswordChange}
-          />
-        </div>
-        {error && <p>{error}</p>}
-        <button type="submit">Login</button>
-      </form>
-      <div>
-        <Link to="/register">
-          Don't have an account?
-          <br />
-          Register
-        </Link>
       </div>
     </div>
   );

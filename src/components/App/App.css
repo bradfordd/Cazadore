@@ -8,7 +8,7 @@
 body {
   background: linear-gradient(45deg, darkred, goldenrod);
   font-family: Consolas, Monaco, "Droid Sans Mono", "Courier New", monospace;
-  padding: 0em;
+  padding-top: 15vh;
   align-items: center;
   min-height: 100vh;
   min-width: 100vw;
@@ -54,7 +54,6 @@ body {
 }
 
 @media (min-width: 321px) {
-  /* additional styles for larger cellphones */
 }
 
 @media (min-width: 768px) {
@@ -67,7 +66,9 @@ body {
 }
 
 @media (min-height: 480px) {
-  /* CSS rules for small mobile devices */
+}
+
+@media (min-height: 640px) {
 }
 
 @media (min-height: 768px) {
@@ -76,4 +77,8 @@ body {
 
 @media (min-height: 900px) {
   /* CSS rules for desktop */
+}
+
+@media (min-height: 1080px) {
+  /* CSS rules for large desktops */
 }

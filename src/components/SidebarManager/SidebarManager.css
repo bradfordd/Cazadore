@@ -1,0 +1,9 @@
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #111;
+  color: white;
+  position: fixed;
+  left: 0; /* Add this to explicitly set it to the left */
+  top: 0; /* Optional: This sets it to the top */
+}

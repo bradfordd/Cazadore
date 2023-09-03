@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import ProjectDashboardManager from "../ProjectDashboardManager/ProjectDashboardManager";
+import ProjectSelectionManager from "../ProjectSelectionManager/ProjectSelectionManager";
 import ProjectDashboardDeveloper from "../ProjectDashboardDeveloper/ProjectDashboardDeveloper";
 import Navbar from "../Navbar/Navbar";
 import withRoleBasedRendering from "../../hocs/withRoleBasedRendering";
@@ -44,7 +44,7 @@ const Homepage = () => {
   }
 
   const DashboardBasedOnRole = withRoleBasedRendering(
-    ProjectDashboardManager,
+    ProjectSelectionManager,
     ProjectDashboardDeveloper
   );
 

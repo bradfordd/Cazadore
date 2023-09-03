@@ -1,19 +1,20 @@
 /* Navbar.css */
 .Navbar {
-  height: 90%;
-  width: 90%;
-  font-size: 16px;
+  height: 15vh;
+  width: 100%;
   display: flex;
-  margin: 1em auto 1em auto;
+  margin: 0 auto 0 auto;
   background: linear-gradient(to right, #333333, #1f1f1f);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   color: white;
   padding: 0px;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
   display: flex;
   justify-content: center; /* Centers items along the main (horizontal) axis */
   align-items: center;
   padding: 0.5em;
-  border-radius: 10px;
 }
 
 .Navbar .menuItem {
@@ -25,11 +26,14 @@
 }
 
 .Navbar ul {
-  margin-top: 1em;
-  margin-bottom: 1em;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
   padding: 0;
   list-style: none;
+  margin: auto;
   display: flex;
+  height: 13vh;
+
   align-items: center; /* This will vertically center align the li elements */
 }
 
@@ -43,15 +47,14 @@
   color: #514ef5; /* Lighter shade for hover. Adjust color as necessary. */
 }
 .Navbar .logo {
-  height: 3em;
+  height: 13vh;
+  width: auto;
+  margin: auto;
 }
 
 @media (min-width: 321px) {
   .Navbar ul li a {
     font-size: 1em;
-  }
-  .Navbar .logo {
-    height: 5em;
   }
 }
 
@@ -59,9 +62,6 @@
   .Navbar ul li a {
     font-size: 3em;
     margin: 0.25em;
-  }
-  .Navbar .logo {
-    height: 7em;
   }
 }
 
@@ -71,19 +71,19 @@
     font-size: 4em;
     margin: 0.25em;
   }
-  .Navbar .logo {
-    height: 9em;
-  }
 }
 
 @media (min-height: 480px) {
-  /* CSS rules for small mobile devices */
+}
+
+@media (min-height: 640px) {
 }
 
 @media (min-height: 768px) {
-  /* CSS rules for tablets */
 }
 
 @media (min-height: 900px) {
-  /* CSS rules for desktop */
+}
+
+@media (min-height: 1080px) {
 }
