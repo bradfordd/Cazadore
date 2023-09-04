@@ -39,10 +39,6 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/homepage" element={<Homepage />} />
-        {/* <Route
-          path="/project/:projectId"
-          element={<ProjectDetailDeveloper />}
-        />  */}
         <Route
           path="/projects/:projectId"
           element={<RoleBasedProjectDetail />}

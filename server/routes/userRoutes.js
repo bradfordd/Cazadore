@@ -17,4 +17,11 @@ router.get(
 );
 router.get("/isUserManager", authenticateJWT);
 
+// New route to update 'lastUpdatedProject' field
+router.put(
+  "/updateLastUpdatedProject",
+  authenticateJWT,
+  userController.updateLastUpdatedProject
+);
+
 module.exports = router;

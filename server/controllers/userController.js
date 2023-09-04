@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Project = require("../models/project");
 const bcrypt = require("bcrypt");
 const validator = require("../validators/userValidator");
 const jwt = require("jsonwebtoken");
@@ -36,7 +37,8 @@ exports.registerNewUser = async (req, res) => {
   const user = new User({
     username: req.body.username,
     password: hashedPassword,
-    role: req.body.role, // Added role here
+    role: req.body.role,
+    lastUpdatedProject: null,
   });
 
   try {
@@ -158,6 +160,64 @@ exports.isUserProjectManager = async (req, res) => {
   } catch (err) {
     console.error(
       "Error occurred while checking if user is a project manager: ",
+      err.message
+    );
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.updateLastUpdatedProject = async (req, res) => {
+  console.log("Attempting to update lastUpdatedProject...");
+  const userId = req.user._id;
+  const lastUpdatedProject = req.body.lastUpdatedProject;
+  console.log("lastUpdatedProject: " + lastUpdatedProject);
+  console.log("Body: ");
+  console.log(req.body);
+
+  try {
+    console.log(`Looking for user with ID: ${userId}`);
+    const user = await User.findById(userId);
+
+    if (!user) {
+      console.log("User not found");
+      return res.status(404).json({ message: "User not found" });
+    }
+    console.log("User found, checking role...");
+
+    // Only allow project managers to update this field
+    if (user.role !== "project manager") {
+      console.log("User is not a project manager");
+      return res.status(403).json({ message: "Not authorized" });
+    }
+    console.log("User is a project manager, checking project...");
+
+    // Check if the user is the project manager for the given project
+    const project = await Project.findById(lastUpdatedProject);
+    if (!project) {
+      console.log("Project not found");
+      return res.status(404).json({ message: "Project not found" });
+    }
+    console.log("Project found, checking project manager...");
+    if (project.projectManager.toString() !== userId.toString()) {
+      console.log("User is not the manager of this project");
+      return res
+        .status(403)
+        .json({ message: "You are not the manager of this project" });
+    }
+    console.log(
+      "User is the manager of this project, updating lastUpdatedProject..."
+    );
+
+    user.lastUpdatedProject = lastUpdatedProject;
+    await user.save();
+
+    console.log("lastUpdatedProject updated successfully");
+    res
+      .status(200)
+      .json({ message: "Last updated project field updated successfully" });
+  } catch (err) {
+    console.error(
+      "Error occurred while updating lastUpdatedProject:",
       err.message
     );
     res.status(500).json({ message: err.message });
