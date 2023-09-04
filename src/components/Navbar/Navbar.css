@@ -2,23 +2,22 @@
 .Navbar {
   height: 15vh;
   width: 100%;
+  font-size: calc(1vw + 1vh);
   display: flex;
   margin: 0 auto 0 auto;
   background: linear-gradient(to right, #333333, #1f1f1f);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   color: white;
-  padding: 0px;
   position: fixed;
   top: 0;
   z-index: 1000;
   display: flex;
-  justify-content: center; /* Centers items along the main (horizontal) axis */
+  justify-content: center;
   align-items: center;
-  padding: 0.5em;
 }
 
 .Navbar .menuItem {
-  margin: 0 0.4em;
+  margin: 2vw;
 }
 
 .Navbar img {
@@ -26,51 +25,50 @@
 }
 
 .Navbar ul {
-  margin-top: 1vh;
-  margin-bottom: 1vh;
   padding: 0;
   list-style: none;
   margin: auto;
   display: flex;
   height: 13vh;
-
-  align-items: center; /* This will vertically center align the li elements */
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .Navbar ul li a {
   color: #fff;
   transition: color 0.3s ease;
   text-decoration: underline;
+  font-size: calc(2vw + 2vh);
 }
 
 .Navbar ul li a:hover {
   color: #514ef5; /* Lighter shade for hover. Adjust color as necessary. */
 }
 .Navbar .logo {
-  height: 13vh;
+  height: 12vh;
   width: auto;
-  margin: auto;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Navbar .logo:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+  border: 2px solid #ffffff;
 }
 
 @media (min-width: 321px) {
-  .Navbar ul li a {
-    font-size: 1em;
-  }
 }
 
 @media (min-width: 768px) {
-  .Navbar ul li a {
-    font-size: 3em;
-    margin: 0.25em;
-  }
 }
 
 /* Mobile-first media query for Desktop */
 @media (min-width: 1024px) {
-  .Navbar ul li a {
-    font-size: 4em;
-    margin: 0.25em;
-  }
 }
 
 @media (min-height: 480px) {

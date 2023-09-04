@@ -27,7 +27,7 @@ const ManagedProjects = () => {
 
   return (
     <div className="projectSelectionManager">
-      <h2>Select a Project to Manage</h2>
+      <h2>Select a Project to Manage:</h2>
       {projects.length > 0 ? (
         <ul>
           {projects.map((project) => (

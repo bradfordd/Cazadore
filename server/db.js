@@ -15,4 +15,13 @@ async function connect() {
   }
 }
 
-module.exports = { connect };
+async function close() {
+  try {
+    await mongoose.connection.close();
+    console.log("MongoDB connection closed!");
+  } catch (err) {
+    console.error("Failed to close MongoDB connection", err);
+  }
+}
+
+module.exports = { connect, close };
