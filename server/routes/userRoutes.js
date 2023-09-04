@@ -24,4 +24,10 @@ router.put(
   userController.updateLastUpdatedProject
 );
 
+router.get(
+  "/lastUpdatedProject",
+  authenticateJWT,
+  userController.getLastUpdatedProject
+);
+
 module.exports = router;

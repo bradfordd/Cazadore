@@ -9,6 +9,7 @@ exports.registerNewUser = async (req, res) => {
   if (existingUser) {
     return res.status(400).json({ message: "Username already exists" });
   }
+
   const usernameValidationResult = validator.validateUsername(
     req.body.username
   );
@@ -31,15 +32,18 @@ exports.registerNewUser = async (req, res) => {
 
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-  const match = await bcrypt.compare(req.body.password, hashedPassword);
-
-  console.log("Creating new user...");
-  const user = new User({
+  // Only add lastUpdatedProject field if the user is a project manager
+  let userFields = {
     username: req.body.username,
     password: hashedPassword,
     role: req.body.role,
-    lastUpdatedProject: null,
-  });
+  };
+
+  if (req.body.role === "project manager") {
+    userFields.lastUpdatedProject = null;
+  }
+
+  const user = new User(userFields);
 
   try {
     const newUser = await user.save();
@@ -218,6 +222,27 @@ exports.updateLastUpdatedProject = async (req, res) => {
   } catch (err) {
     console.error(
       "Error occurred while updating lastUpdatedProject:",
+      err.message
+    );
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.getLastUpdatedProject = async (req, res) => {
+  try {
+    console.log("Getting last updated project for current user...");
+    const user = await User.findById(req.user._id, "lastUpdatedProject");
+
+    if (user) {
+      console.log("Found user:", user);
+      res.status(200).json({ lastUpdatedProject: user.lastUpdatedProject });
+    } else {
+      console.log("User not found for ID:", req.user._id);
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (err) {
+    console.error(
+      "Error occurred while fetching last updated project:",
       err.message
     );
     res.status(500).json({ message: err.message });

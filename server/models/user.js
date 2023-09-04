@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema({
     ref: "Project", // assuming your project model is named "Project"
     required: function () {
       return this.role === "project manager";
-    }, // only required if role is "project manager"
+    },
   },
 });
 

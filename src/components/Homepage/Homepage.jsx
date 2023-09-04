@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ProjectSelectionManager from "../ProjectSelectionManager/ProjectSelectionManager";
 import ProjectDashboardDeveloper from "../ProjectDashboardDeveloper/ProjectDashboardDeveloper";
+import DeveloperHomepage from "../DeveloperHomepage/DeveloperHomepage";
+import ProjectManagerHomepage from "../ProjectManagerHomepage/ProjectManagerHomepage";
 import Navbar from "../Navbar/Navbar";
 import withRoleBasedRendering from "../../hocs/withRoleBasedRendering";
 import "./Homepage.css";
@@ -43,15 +45,15 @@ const Homepage = () => {
     return <div>Loading...</div>;
   }
 
-  const DashboardBasedOnRole = withRoleBasedRendering(
-    ProjectSelectionManager,
-    ProjectDashboardDeveloper
+  const HomepageBasedOnRole = withRoleBasedRendering(
+    ProjectManagerHomepage,
+    DeveloperHomepage
   );
 
   return (
     <div className="Homepage">
       <Navbar />
-      <DashboardBasedOnRole />
+      <HomepageBasedOnRole />
     </div>
   );
 };
