@@ -17,10 +17,12 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
   lastUpdatedProject: {
-    type: mongoose.Schema.Types.ObjectId, // holds the objectID of the last updated project
-    ref: "Project", // assuming your project model is named "Project"
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Project",
     required: function () {
-      return this.role === "project manager";
+      return (
+        this.role === "project manager" && this.lastUpdatedProject !== null
+      );
     },
   },
 });
