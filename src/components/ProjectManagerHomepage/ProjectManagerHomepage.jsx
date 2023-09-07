@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ProjectSelectionManager from "../ProjectSelectionManager/ProjectSelectionManager";
+import BugReportPriorityChart from "../BugReportPriorityChart/BugReportPriorityChart";
 import { useNavigate } from "react-router-dom";
 
 const ProjectManagerHomepage = () => {
@@ -89,7 +90,7 @@ const ProjectManagerHomepage = () => {
   return lastUpdatedProject === null ? (
     <ProjectSelectionManager />
   ) : (
-    <div>This is the Project Manager homepage</div>
+    <BugReportPriorityChart />
   );
 };
 

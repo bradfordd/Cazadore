@@ -69,6 +69,18 @@ router.get(
   projectController.getUnassignedDevelopers
 );
 
+router.get(
+  "/:id/assigned-developers",
+  projectManagerAuthorization,
+  projectController.getAssignedDevelopers
+);
+
+router.put(
+  "/:id/assignDeveloperToProject",
+  projectManagerAuthorization,
+  projectController.assignUserToProject
+);
+
 // Get all users who are either a project manager or a developer for a specific project
 router.get("/:id/participants", projectController.getProjectParticipants);
 

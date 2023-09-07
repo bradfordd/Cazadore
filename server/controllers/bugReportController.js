@@ -420,3 +420,166 @@ exports.getBugReportById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.getBugReportsCountByCreator = async (req, res) => {
+  console.log("getBugReportsCountByCreator called");
+
+  try {
+    console.log("Entering try block");
+    const projectId = req.params.projectId;
+    console.log(`Project ID: ${projectId}`);
+
+    // Fetch all active bug reports for a specific project
+    console.log("Fetching all active bug reports for the project");
+    const bugReports = await BugReport.find({
+      project: projectId,
+    });
+    console.log(`Fetched ${bugReports.length} active bug reports`);
+
+    if (!bugReports.length) {
+      console.log("No active bug reports found for this project");
+      return res
+        .status(404)
+        .json({ message: "No active bug reports found for this project." });
+    }
+
+    // Create an object to hold the bug report counts for each creator
+    const creatorBugReportCount = {};
+    console.log("Initializing creatorBugReportCount object");
+
+    for (const report of bugReports) {
+      console.log(`Processing report ID: ${report._id}`);
+      const creatorId = report.createdBy;
+
+      // Fetch the user information for the creator
+      const user = await User.findById(creatorId);
+      const key = user ? user.username : "Unknown";
+      console.log(`Creator Username: ${key}`);
+
+      // Initialize or increment the count for the creator
+      creatorBugReportCount[key] = (creatorBugReportCount[key] || 0) + 1;
+      console.log(
+        `Updated count for creator ${key}: ${creatorBugReportCount[key]}`
+      );
+    }
+
+    console.log("Sending response");
+    res.status(200).json(creatorBugReportCount);
+  } catch (error) {
+    console.log("Caught an error:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getBugReportsCountByAssignedTo = async (req, res) => {
+  try {
+    const projectId = req.params.projectId; // Fetch the ID of the project for which reports are being queried
+
+    // Fetch all active bug reports for the specified project
+    const createdBugReports = await BugReport.find({
+      project: projectId,
+    });
+
+    if (!createdBugReports.length) {
+      return res.status(404).json({
+        message: "No active bug reports found for this project.",
+      });
+    }
+
+    // Create an object to hold the bug report counts for each user
+    const userBugReportCount = {};
+
+    for (const report of createdBugReports) {
+      const assignedUserId = report.assignedTo;
+
+      // Fetch the user information for the person assigned to the bug
+      const user = await User.findById(assignedUserId);
+      const key = user ? user.username : "Unassigned"; // If assignedTo is null, consider it as 'Unassigned'
+
+      // Initialize or increment the count for the user
+      userBugReportCount[key] = (userBugReportCount[key] || 0) + 1;
+    }
+
+    res.status(200).json(userBugReportCount);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getBugReportsCountByStatus = async (req, res) => {
+  try {
+    // Get projectId from request parameters
+    const projectId = req.params.projectId;
+
+    if (!projectId) {
+      return res.status(400).json({ error: "Project ID is required" });
+    }
+
+    // Fetch all active bug reports for the specified project
+    const allBugReports = await BugReport.find({
+      project: projectId,
+      isActive: true,
+    });
+
+    if (!allBugReports.length) {
+      return res
+        .status(404)
+        .json({ message: "No active bug reports found for this project." });
+    }
+
+    const bugReportCountByStatus = {};
+
+    // Count the number of bug reports for each status
+    for (const report of allBugReports) {
+      const status = report.status;
+      bugReportCountByStatus[status] =
+        (bugReportCountByStatus[status] || 0) + 1;
+    }
+
+    res.status(200).json(bugReportCountByStatus);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getBugReportsCountByPriority = async (req, res) => {
+  try {
+    const projectId = req.params.projectId; // Assuming projectId is a request parameter
+
+    if (!projectId) {
+      return res.status(400).json({ error: "Project ID is required" });
+    }
+
+    // Define an object to hold the count for each priority type
+    // Assuming your priorities are "Low", "Medium", and "High"
+    const priorityCount = {
+      Low: 0,
+      Medium: 0,
+      High: 0,
+    };
+
+    // Fetch all bug reports associated with the project ID
+    const bugReports = await BugReport.find({
+      project: projectId,
+      isActive: true,
+    });
+
+    if (!bugReports.length) {
+      return res
+        .status(404)
+        .json({ message: "No bug reports found for this project." });
+    }
+
+    // Loop through each bug report to count the number of each priority
+    bugReports.forEach((report) => {
+      const priority = report.priority; // Assuming 'priority' is a field in your BugReport model
+      if (priorityCount.hasOwnProperty(priority)) {
+        priorityCount[priority]++;
+      }
+    });
+
+    res.status(200).json(priorityCount);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

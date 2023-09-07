@@ -1,5 +1,6 @@
 const Project = require("../models/project");
 const User = require("../models/user");
+const isUserDeveloper = require("../middleware/isUserADeveloper"); // Import your function
 
 const projectController = {
   // Get all projects
@@ -433,6 +434,82 @@ const projectController = {
     } catch (err) {
       console.error("Error occurred in getUnassignedDevelopers:", err);
       return res.status(500).json({ message: err.message });
+    }
+  },
+  getAssignedDevelopers: async (req, res) => {
+    try {
+      console.log("Inside getAssignedDevelopers function");
+
+      const projectId = req.params.id;
+
+      // Retrieve the project by its ID
+      const project = await Project.findById(projectId);
+
+      if (!project) {
+        console.log("Project not found with the provided ID");
+        return res.status(404).json({ message: "Project not found." });
+      }
+
+      // Retrieve all developers from the database who are assigned to this project
+      const assignedDevelopers = await User.find({
+        role: "developer",
+        _id: { $in: project.teamMembers },
+      }).select("-password");
+
+      // Return the list of assigned developers
+      res.json(assignedDevelopers);
+    } catch (err) {
+      console.error("Error occurred in getAssignedDevelopers:", err);
+      return res.status(500).json({ message: err.message });
+    }
+  },
+  assignUserToProject: async (req, res) => {
+    try {
+      console.log("Inside assignUserToProject function");
+      const projectId = req.params.id;
+      const userId = req.body.userId;
+      const requesterId = req.user._id; // Assuming this is set by your authentication middleware
+
+      // Fetch the project and user
+      const project = await Project.findById(projectId);
+      const user = await User.findById(userId);
+      const requester = await User.findById(requesterId);
+
+      if (!project || !user || !requester) {
+        return res.status(404).json({ message: "Project or User not found." });
+      }
+
+      // Check if the requester is the project manager
+      if (requester._id.toString() !== project.projectManager.toString()) {
+        return res
+          .status(403)
+          .json({ message: "Only the project manager can assign users." });
+      }
+
+      // Check if the user to be assigned is a developer
+      if (!isUserDeveloper(user)) {
+        return res
+          .status(400)
+          .json({ message: "Only developers can be assigned." });
+      }
+
+      // Check if the user is already a team member
+      if (project.teamMembers.includes(userId)) {
+        return res
+          .status(400)
+          .json({ message: "User is already a team member." });
+      }
+
+      // Assign the user to the project
+      project.teamMembers.push(userId);
+      await project.save();
+
+      res
+        .status(200)
+        .json({ message: "User has been assigned to the project." });
+    } catch (err) {
+      console.error("Error occurred in assignUserToProject:", err);
+      res.status(500).json({ message: err.message });
     }
   },
 };
